@@ -15,6 +15,7 @@
 	</issueManagement>
 	<scm>
 		<connection>scm:git:https://github.com/stephdz/OpenSubtitles</connection>
+		<developerConnection>scm:git:https://github.com/stephdz/OpenSubtitles</developerConnection>
 	</scm>
 	<properties>
 		<java.version>1.6</java.version>
