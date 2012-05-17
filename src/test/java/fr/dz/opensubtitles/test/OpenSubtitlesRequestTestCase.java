@@ -1,7 +1,10 @@
 package fr.dz.opensubtitles.test;
 
+import java.io.File;
+
 import junit.framework.Assert;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.dz.opensubtitles.OpenSubtitlesRequest;
@@ -10,12 +13,19 @@ public class OpenSubtitlesRequestTestCase extends AbstractOpenSubtitlesTest {
 
 	// Constantes
 	private static final String LANG = "fre";
-	private static final String SERIE_FILENAME = "The.Big.Bang.Theory.S05E23.[LOL].avi";
-	private static final String FILM_FILENAME = "Wild.Wild.West.[LOL].avi";
+	private static final String FILE_PREFIX = "target/test-files/";
+	private static final String SERIE_FILENAME = FILE_PREFIX + "The.Big.Bang.Theory.S05E23.[LOL].avi";
+	private static final String FILM_FILENAME = FILE_PREFIX + "Wild.Wild.West.[LOL].avi";
 	private static final String SERIE = "the big bang theory";
 	private static final String FILM = "wild wild west [lol]";
 	private static final Integer SEASON = 5;
 	private static final Integer EPISODE = 23;
+	
+	@BeforeClass
+	public static void init() {
+		File dir = new File(FILE_PREFIX);
+		dir.mkdirs();
+	}
 	
 	@Test
 	public void testNull() throws Exception {
@@ -34,7 +44,7 @@ public class OpenSubtitlesRequestTestCase extends AbstractOpenSubtitlesTest {
 		debug();
 		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_FILENAME);
 		Assert.assertEquals("Lang", LANG, request.getLang());
-		Assert.assertEquals("File", SERIE_FILENAME, request.getFilename());
+		Assert.assertEquals("File", SERIE_FILENAME, FILE_PREFIX + request.getFilename());
 		Assert.assertEquals("Query", SERIE, request.getQuery());
 		Assert.assertEquals("Season", SEASON, request.getSeason());
 		Assert.assertEquals("Episode", EPISODE, request.getEpisode());
@@ -46,7 +56,7 @@ public class OpenSubtitlesRequestTestCase extends AbstractOpenSubtitlesTest {
 		debug();
 		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, "/home/steph/"+SERIE_FILENAME);
 		Assert.assertEquals("Lang", LANG, request.getLang());
-		Assert.assertEquals("File", SERIE_FILENAME, request.getFilename());
+		Assert.assertEquals("File", SERIE_FILENAME, FILE_PREFIX + request.getFilename());
 		Assert.assertEquals("Query", SERIE, request.getQuery());
 		Assert.assertEquals("Season", SEASON, request.getSeason());
 		Assert.assertEquals("Episode", EPISODE, request.getEpisode());
@@ -58,7 +68,7 @@ public class OpenSubtitlesRequestTestCase extends AbstractOpenSubtitlesTest {
 		debug();
 		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, FILM_FILENAME);
 		Assert.assertEquals("Lang", LANG, request.getLang());
-		Assert.assertEquals("File", FILM_FILENAME, request.getFilename());
+		Assert.assertEquals("File", FILM_FILENAME, FILE_PREFIX + request.getFilename());
 		Assert.assertEquals("Query", FILM, request.getQuery());
 		Assert.assertNull("Season", request.getSeason());
 		Assert.assertNull("Episode", request.getEpisode());
