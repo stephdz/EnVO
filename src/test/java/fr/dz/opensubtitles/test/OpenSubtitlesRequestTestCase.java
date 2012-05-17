@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import fr.dz.opensubtitles.OpenSubtitlesRequest;
 
-public class OpenSubtitlesRequestTestCase {
+public class OpenSubtitlesRequestTestCase extends AbstractOpenSubtitlesTest {
 
 	// Constantes
 	private static final String LANG = "fre";
@@ -19,9 +19,10 @@ public class OpenSubtitlesRequestTestCase {
 	
 	@Test
 	public void testNull() throws Exception {
+		debug();
 		OpenSubtitlesRequest request = new OpenSubtitlesRequest(null, null);
 		Assert.assertNull("Lang", request.getLang());
-		Assert.assertNull("File", request.getFile());
+		Assert.assertNull("File", request.getFilename());
 		Assert.assertNull("Query", request.getQuery());
 		Assert.assertNull("Season", request.getSeason());
 		Assert.assertNull("Episode", request.getEpisode());
@@ -30,9 +31,22 @@ public class OpenSubtitlesRequestTestCase {
 	
 	@Test
 	public void testNonExistingSerieFile() throws Exception {
+		debug();
 		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_FILENAME);
 		Assert.assertEquals("Lang", LANG, request.getLang());
-		Assert.assertEquals("File", SERIE_FILENAME, request.getFile());
+		Assert.assertEquals("File", SERIE_FILENAME, request.getFilename());
+		Assert.assertEquals("Query", SERIE, request.getQuery());
+		Assert.assertEquals("Season", SEASON, request.getSeason());
+		Assert.assertEquals("Episode", EPISODE, request.getEpisode());
+		Assert.assertNull("Filesize", request.getFilesize());
+	}
+	
+	@Test
+	public void testNonExistingSerieFilePrefix() throws Exception {
+		debug();
+		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, "/home/steph/"+SERIE_FILENAME);
+		Assert.assertEquals("Lang", LANG, request.getLang());
+		Assert.assertEquals("File", SERIE_FILENAME, request.getFilename());
 		Assert.assertEquals("Query", SERIE, request.getQuery());
 		Assert.assertEquals("Season", SEASON, request.getSeason());
 		Assert.assertEquals("Episode", EPISODE, request.getEpisode());
@@ -41,9 +55,10 @@ public class OpenSubtitlesRequestTestCase {
 	
 	@Test
 	public void testNonExistingNonSerieFile() throws Exception {
+		debug();
 		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, FILM_FILENAME);
 		Assert.assertEquals("Lang", LANG, request.getLang());
-		Assert.assertEquals("File", FILM_FILENAME, request.getFile());
+		Assert.assertEquals("File", FILM_FILENAME, request.getFilename());
 		Assert.assertEquals("Query", FILM, request.getQuery());
 		Assert.assertNull("Season", request.getSeason());
 		Assert.assertNull("Episode", request.getEpisode());

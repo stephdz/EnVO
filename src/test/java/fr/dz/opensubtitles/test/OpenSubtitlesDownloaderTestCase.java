@@ -2,13 +2,13 @@ package fr.dz.opensubtitles.test;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import fr.dz.opensubtitles.OpenSubtitlesDownloader;
 import fr.dz.opensubtitles.OpenSubtitlesRequest;
 
-public class OpenSubtitlesDownloaderTestCase {
+
+public class OpenSubtitlesDownloaderTestCase extends AbstractOpenSubtitlesTest {
 
 	// Constantes
 	private static final String LANG = "fre";
@@ -21,6 +21,7 @@ public class OpenSubtitlesDownloaderTestCase {
 	
 	@Test
 	public void testHasSubtitlesSerieFile() throws Exception {
+		debug();
 		
 		// Test de l'URL
 		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_1_RESULT_FILENAME);
@@ -33,6 +34,7 @@ public class OpenSubtitlesDownloaderTestCase {
 	
 	@Test
 	public void testHasSubtitlesSerieFileMultipleResults() throws Exception {
+		debug();
 		
 		// Test de l'URL
 		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_2_RESULTS_FILENAME);
@@ -45,6 +47,7 @@ public class OpenSubtitlesDownloaderTestCase {
 	
 	@Test
 	public void testHasSubtitlesNonSerieFile() throws Exception {
+		debug();
 		
 		// Test de l'URL
 		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, FILM_FILENAME);
@@ -57,19 +60,27 @@ public class OpenSubtitlesDownloaderTestCase {
 	
 	@Test
 	public void testDownloadSerieFileSingleResult() throws Exception {
+		debug();
 		
 		// Test depuis un fichier HTML résultat de hasSubtitles
-		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader("html/"+SERIE_1_RESULT_FILENAME+".html");
-		downloader.downloadFirstSubtitles();
+		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_1_RESULT_FILENAME);
+		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
+		if ( downloader.hasSubtitles() ) {
+			downloader.downloadFirstSubtitles();
+		}
 		Assert.assertEquals("Nombre de sous-titres invalides pour "+SERIE_1_RESULT_FILENAME, 1, downloader.getSubtitlesResults().size());
 	}
 	
 	@Test
 	public void testDownloadSerieFileMultipleResult() throws Exception {
+		debug();
 		
 		// Test depuis un fichier HTML résultat de hasSubtitles
-		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader("html/"+SERIE_2_RESULTS_FILENAME+".html");
-		downloader.downloadFirstSubtitles();
+		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_2_RESULTS_FILENAME);
+		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
+		if ( downloader.hasSubtitles() ) {
+			downloader.downloadFirstSubtitles();
+		}
 		Assert.assertEquals("Nombre de sous-titres invalides pour "+SERIE_2_RESULTS_FILENAME, 2, downloader.getSubtitlesResults().size());
 	}
 }

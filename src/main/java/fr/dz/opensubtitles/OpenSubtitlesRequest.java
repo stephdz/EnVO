@@ -1,12 +1,17 @@
 package fr.dz.opensubtitles;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import fr.dz.opensubtitles.exception.OpenSubtitlesException;
 
 public class OpenSubtitlesRequest implements Serializable {
+	
+	private static final Logger LOGGER = Logger.getLogger(OpenSubtitlesRequest.class);
 
 	private static final long serialVersionUID = 1039194045321136919L;
 
@@ -18,7 +23,8 @@ public class OpenSubtitlesRequest implements Serializable {
 	
 	// Champs du bean
 	private String lang;
-	private String file;
+	private String folder;
+	private String filename;
 	private String query;
 	private Integer season;
 	private Integer episode;
@@ -31,40 +37,74 @@ public class OpenSubtitlesRequest implements Serializable {
 	 * @throws OpenSubtitlesException
 	 */
 	public OpenSubtitlesRequest(String lang, String file) {
-		setLang(lang);
-		setFile(file);
+		this.lang = lang;
+		init(file);
 	}
 	
 	/**
 	 * Renseigne les différents champs à partir du nom du fichier
 	 * @param file the file to set
 	 */
-	public void setFile(String file) {
-		this.file = file;
-		
-		// Utilisation d'un expression régulière pour récupérer les infos à partir du nom de fichier
+	public void init(String file) {
 		if ( file != null ) {
+			
+			// Récupération du fichier
+			int folderIndex = file.lastIndexOf(File.separator);
+			if ( folderIndex != -1 ) {
+				this.folder = file.substring(0, folderIndex);
+				this.filename = file.substring(folderIndex + File.separator.length());
+			} else {
+				this.folder = ".";
+				this.filename = file;
+			}
+			
+			// Utilisation d'un expression régulière pour récupérer les infos à partir du nom de fichier
 			Pattern pattern = Pattern.compile(SERIE_REG_EXP);
-			Matcher matcher = pattern.matcher(file);
+			Matcher matcher = pattern.matcher(filename);
 			if ( matcher.find() ) {
 				if ( matcher.group(QUERY_GROUP) != null ) {
-					setQuery(matcher.group(QUERY_GROUP).replaceAll("\\.", " ").trim().toLowerCase());
+					this.query = matcher.group(QUERY_GROUP).replaceAll("\\.", " ").trim().toLowerCase();
 				}
 				if ( matcher.group(SEASON_GROUP) != null ) {
-					setSeason(Integer.parseInt(matcher.group(SEASON_GROUP)));
+					this.season = Integer.parseInt(matcher.group(SEASON_GROUP));
 				}
 				if ( matcher.group(EPISODE_GROUP) != null ) {
-					setEpisode(Integer.parseInt(matcher.group(EPISODE_GROUP)));
+					this.episode = Integer.parseInt(matcher.group(EPISODE_GROUP));
 				}
 			} else {
-				if ( file.lastIndexOf(".") != -1 ) {
-					query = file.substring(0, file.lastIndexOf(".")); 
+				if ( filename.lastIndexOf(".") != -1 ) {
+					query = filename.substring(0, filename.lastIndexOf(".")); 
 				} else {
-					query = file;
+					query = filename;
 				}
 				query = query.replaceAll("\\.", " ").trim().toLowerCase();
 			}
+			
+			// Récupération de la taille du fichier
+			File fileHandler = new File(file);
+			if ( fileHandler.exists() ) {
+				this.filesize = fileHandler.length();
+			}
 		}
+		
+		// Affichage des infos de debug
+		debug(file);
+	}
+
+	/**
+	 * Affichage des infos de debug
+	 */
+	private void debug(String file) {
+		LOGGER.debug("#####################################################################");
+		LOGGER.debug("# Requète : "+file+" (langue="+lang+")");
+		LOGGER.debug("#####################################################################");
+		LOGGER.debug(" - lang : "+lang);
+		LOGGER.debug(" - folder : "+folder);
+		LOGGER.debug(" - filename : "+filename);
+		LOGGER.debug(" - query : " + query);
+		LOGGER.debug(" - season : " + season);
+		LOGGER.debug(" - episode : " + episode);
+		LOGGER.debug(" - filesize : " + filesize);
 	}
 
 	/*
@@ -77,19 +117,19 @@ public class OpenSubtitlesRequest implements Serializable {
 	public String getLang() {
 		return lang;
 	}
-
+	
 	/**
-	 * @param lang the lang to set
+	 * @return the folder
 	 */
-	public void setLang(String lang) {
-		this.lang = lang;
+	public String getFolder() {
+		return folder;
 	}
 
 	/**
-	 * @return the file
+	 * @return the filename
 	 */
-	public String getFile() {
-		return file;
+	public String getFilename() {
+		return filename;
 	}
 
 	/**
@@ -100,24 +140,10 @@ public class OpenSubtitlesRequest implements Serializable {
 	}
 
 	/**
-	 * @param query the query to set
-	 */
-	public void setQuery(String query) {
-		this.query = query;
-	}
-
-	/**
 	 * @return the season
 	 */
 	public Integer getSeason() {
 		return season;
-	}
-
-	/**
-	 * @param season the season to set
-	 */
-	public void setSeason(Integer season) {
-		this.season = season;
 	}
 
 	/**
@@ -128,24 +154,9 @@ public class OpenSubtitlesRequest implements Serializable {
 	}
 
 	/**
-	 * @param episode the episode to set
-	 */
-	public void setEpisode(Integer episode) {
-		this.episode = episode;
-	}
-
-	/**
 	 * @return the filesize
 	 */
 	public Long getFilesize() {
 		return filesize;
 	}
-
-	/**
-	 * @param filesize the filesize to set
-	 */
-	public void setFilesize(Long filesize) {
-		this.filesize = filesize;
-	}
-
 }

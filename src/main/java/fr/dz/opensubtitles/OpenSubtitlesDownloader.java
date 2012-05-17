@@ -13,9 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -24,7 +22,7 @@ import fr.dz.opensubtitles.exception.OpenSubtitlesException;
 
 public class OpenSubtitlesDownloader {
 	
-	private static final Logger logger = Logger.getLogger(OpenSubtitlesDownloader.class);
+	private static final Logger LOGGER = Logger.getLogger(OpenSubtitlesDownloader.class);
 	
 	// Constantes
 	public static final String OPEN_SUBTITLES_DOMAIN = "http://www.opensubtitles.org";
@@ -40,9 +38,9 @@ public class OpenSubtitlesDownloader {
 	private static final String USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0";
 	private static final String NO_RESULT_STRING = "<div class=\"msg warn\"><b>Aucun résultat</b> trouvé";
 	private static final String SUBTITLES_PAGE_TEXT = "<fieldset><legend>Détails des sous-titres</legend><div";
-	private static final String SUBTITLE_URL_PREFIX = "/fr/subtitleserve/sub/";
-	private static final String SUBTITLE_URL_START = "<a href=\"" + SUBTITLE_URL_PREFIX;
-	private static final String SUBTITLE_URL_END = "\"";
+	private static final String SUBTITLE_URL_PREFIX = "/fr/subtitles/";
+	private static final String SUBTITLE_ID_START = "</tr><tr onclick=\"servOC(";
+	private static final String SUBTITLE_ID_END = ",";
 	
 	// La requète
 	private OpenSubtitlesRequest request;
@@ -58,15 +56,6 @@ public class OpenSubtitlesDownloader {
 	public OpenSubtitlesDownloader(OpenSubtitlesRequest request) throws OpenSubtitlesException {
 		setRequest(request);
 	}
-	
-	/**
-	 * Constructeur à partir d'une page de résultat de OpenSubtitles (pour simplifier les tests)
-	 * @param htmlFile
-	 * @throws OpenSubtitlesException
-	 */
-	public OpenSubtitlesDownloader(String htmlFile) throws OpenSubtitlesException {
-		this.queryResultPage = getFileContent(htmlFile);
-	}
 
 	/**
 	 * Exécute la recherche de sous-titres et retourne true si au moins un résultat a été trouvé, false sinon
@@ -75,17 +64,18 @@ public class OpenSubtitlesDownloader {
 	 */
 	public boolean hasSubtitles() throws OpenSubtitlesException {
 		
-		logger.debug("Exécution de la requète : "+queryURL);
-		logger.debug("Recherche de : "+NO_RESULT_STRING);
-        
+		LOGGER.debug("#####################################################################");
+		LOGGER.debug("# Exécution de la requète : "+queryURL);
+		LOGGER.debug("#####################################################################");
+		
         // Récupération de la page de résultat de la requète
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd-hhmm");
-        File saveFolder = new File("html");
-        saveFolder.mkdirs();
-        File html = new File(saveFolder.getPath()+"/"+request.getFile()+"-"+format.format(new Date())+".html");
-        this.queryResultPage = getURLContent(queryURL, html);
+        this.queryResultPage = getURLContent(queryURL);
         
-        return queryResultPage.indexOf(NO_RESULT_STRING) != -1;
+        // Recherche de la chaîne indiquant qu'il n'y a pas de résultat
+        boolean trouve = queryResultPage.indexOf(NO_RESULT_STRING) != -1;
+        LOGGER.debug("Chaîne '"+NO_RESULT_STRING+"' "+(trouve?"":"non ")+"trouvée");
+        
+        return ! trouve; 
 	}
 
 	/**
@@ -93,11 +83,25 @@ public class OpenSubtitlesDownloader {
 	 * @throws OpenSubtitlesException
 	 */
 	public void downloadFirstSubtitles() throws OpenSubtitlesException {
+		if ( queryResultPage == null ) {
+			throw new OpenSubtitlesException("Appeler hasSubtitles() avant d'appeler downloadFirstSubtitles()");
+		}
 		
 		// Récupération de la liste des URLs de sous-titres 
 		this.subtitlesResults = getSubtitlesURLs();
+		
+		// Choix du meilleur scoring (le plus petit)
+		OpenSubtitlesResult bestResult = null;
+		for ( OpenSubtitlesResult result : subtitlesResults ) {
+			if ( bestResult == null || result.getScoring() < bestResult.getScoring() ) {
+				bestResult = result;
+			}
+		}
+		
+		// Téléchargement du meilleur résultat
+		download(bestResult);
 	}
-	
+
 	/**
 	 * Retourne le contenu correspondant à une URL
 	 * @param url
@@ -191,6 +195,14 @@ public class OpenSubtitlesDownloader {
 	}
 	
 	/**
+	 * Télécharge le résultat passé en paramètre
+	 * @param bestResult
+	 */
+	private void download(OpenSubtitlesResult bestResult) {
+		// TODO A coder
+	}
+	
+	/**
 	 * Récupère la liste des sous titres depuis la page de résultat de requète
 	 * @return
 	 * @throws OpenSubtitlesException 
@@ -200,19 +212,18 @@ public class OpenSubtitlesDownloader {
 		
 		// Cas 1 : un seul résultat, on est déjà sur la bonne page
 		if ( isSubtitlesPage(queryResultPage) ) {
-			result.add(new OpenSubtitlesResult(queryResultPage));
+			result.add(new OpenSubtitlesResult(request, queryResultPage));
 		}
 		// Cas 2 : plusieurs résultats, on est sur la liste des fichiers de sous-titres
 		else {
 			// Recherche des occurences du préfixe d'URL de sous-titre
 			int start = 0;
-			while ( (start = queryResultPage.indexOf(SUBTITLE_URL_START, start)) != -1 ) {
-				start += SUBTITLE_URL_START.length();
-				int end = queryResultPage.indexOf(SUBTITLE_URL_END, start);
+			while ( (start = queryResultPage.indexOf(SUBTITLE_ID_START, start)) != -1 ) {
+				start += SUBTITLE_ID_START.length();
+				int end = queryResultPage.indexOf(SUBTITLE_ID_END, start);
 				String subtitleId = queryResultPage.substring(start, end);
-				logger.debug("Subtitle id : "+subtitleId);
 				try {
-					result.add(new OpenSubtitlesResult(new URL(OPEN_SUBTITLES_DOMAIN+SUBTITLE_URL_PREFIX+subtitleId)));
+					result.add(new OpenSubtitlesResult(request, new URL(OPEN_SUBTITLES_DOMAIN+SUBTITLE_URL_PREFIX+subtitleId)));
 				} catch (MalformedURLException e) {
 					throw new OpenSubtitlesException("URL invalide : "+OPEN_SUBTITLES_DOMAIN+SUBTITLE_URL_PREFIX+subtitleId);
 				}
@@ -244,7 +255,7 @@ public class OpenSubtitlesDownloader {
 		if ( request.getLang() != null ) {
 			appendParameter(queryURLBuffer, LANGUAGE_PARAM_NAME, request.getLang());
 		} else {
-			throw new OpenSubtitlesException("La langue est obligatoire pour le fichier "+request.getFile());
+			throw new OpenSubtitlesException("La langue est obligatoire pour le fichier "+request.getFilename());
 		}
 		if ( request.getSeason() != null ) {
 			appendParameter(queryURLBuffer, SEASON_PARAM_NAME, request.getSeason());
@@ -260,7 +271,7 @@ public class OpenSubtitlesDownloader {
 				throw new OpenSubtitlesException("Erreur pendant l'encodage de '"+request.getQuery()+"' pour l'URL", e);
 			}
 		} else {
-			throw new OpenSubtitlesException("La requète est obligatoire pour le fichier "+request.getFile());
+			throw new OpenSubtitlesException("La requète est obligatoire pour le fichier "+request.getFilename());
 		}
 		try {
 			this.queryURL = new URL(queryURLBuffer.toString());
