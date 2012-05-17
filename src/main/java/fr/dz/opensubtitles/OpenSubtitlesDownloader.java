@@ -1,11 +1,14 @@
 package fr.dz.opensubtitles;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -14,15 +17,14 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import fr.dz.opensubtitles.exception.OpenSubtitlesException;
 
 public class OpenSubtitlesDownloader {
-	
-	private static final Logger LOGGER = Logger.getLogger(OpenSubtitlesDownloader.class);
 	
 	// Constantes
 	public static final String OPEN_SUBTITLES_DOMAIN = "http://www.opensubtitles.org";
@@ -64,16 +66,15 @@ public class OpenSubtitlesDownloader {
 	 */
 	public boolean hasSubtitles() throws OpenSubtitlesException {
 		
-		LOGGER.debug("#####################################################################");
-		LOGGER.debug("# Exécution de la requète : "+queryURL);
-		LOGGER.debug("#####################################################################");
+		OpenSubtitles.LOGGER.debug("#####################################################################");
+		OpenSubtitles.LOGGER.debug("# Exécution de la requète : "+queryURL);
+		OpenSubtitles.LOGGER.debug("#####################################################################");
 		
         // Récupération de la page de résultat de la requète
         this.queryResultPage = getURLContent(queryURL);
         
         // Recherche de la chaîne indiquant qu'il n'y a pas de résultat
         boolean trouve = queryResultPage.indexOf(NO_RESULT_STRING) != -1;
-        LOGGER.debug("Chaîne '"+NO_RESULT_STRING+"' "+(trouve?"":"non ")+"trouvée");
         
         return ! trouve; 
 	}
@@ -195,11 +196,113 @@ public class OpenSubtitlesDownloader {
 	}
 	
 	/**
+	 * Sauvegarde le contenu d'une URL dans un fichier
+	 * @param url
+	 * @param file
+	 * @return
+	 * @throws OpenSubtitlesException 
+	 */
+	public static void saveURL(URL url, File file) throws OpenSubtitlesException {
+		BufferedInputStream in = null;
+		BufferedOutputStream out = null;
+        try {
+        	// Création de la connexion
+			URLConnection connection = url.openConnection();
+	        connection.setRequestProperty("User-Agent", USER_AGENT);
+	        connection.connect();
+        	
+	        // Enregistrement du fichier
+			saveInput(connection.getInputStream(), file);
+		} catch (Exception e) {
+			throw new OpenSubtitlesException("Erreur pendant la sauvegarde de l'URL '"+url+"' dans le fichier : "+file, e);
+		} finally {
+			if ( in != null ) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					throw new OpenSubtitlesException("Erreur pendant la sauvegarde de l'URL '"+url+"' dans le fichier : "+file, e);
+				}
+			}
+			if ( out != null ) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					throw new OpenSubtitlesException("Erreur pendant la sauvegarde de l'URL '"+url+"' dans le fichier : "+file, e);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Sauvegarde le contenu d'un input stream dans un fichier
+	 * @param in
+	 * @param file
+	 * @return
+	 * @throws OpenSubtitlesException 
+	 */
+	public static void saveInput(InputStream in, File file) throws OpenSubtitlesException {
+		BufferedOutputStream out = null;
+        try {
+        	// Enregistrement du fichier
+	        in = new BufferedInputStream(in);
+			out = new BufferedOutputStream(new FileOutputStream(file));
+			
+			// Enregistrement
+			byte[] buffer = new byte[1024];
+			int nbRead = 0;
+			while ( (nbRead = in.read(buffer)) != -1 ) {
+				out.write(buffer, 0, nbRead);
+			}
+		} catch (IOException e) {
+			throw new OpenSubtitlesException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
+		} finally {
+			if ( in != null ) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					throw new OpenSubtitlesException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
+				}
+			}
+			if ( out != null ) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					throw new OpenSubtitlesException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Télécharge le résultat passé en paramètre
 	 * @param bestResult
+	 * @throws OpenSubtitlesException 
 	 */
-	private void download(OpenSubtitlesResult bestResult) {
-		// TODO A coder
+	private void download(OpenSubtitlesResult bestResult) throws OpenSubtitlesException {
+		try {
+			// Enregistrement du zip dans un fichier temporaire
+			File file = File.createTempFile("opensubtitle", ".zip");
+			saveURL(bestResult.getDownloadURL(), file);
+			
+			// Extraction du fichier SRT
+			ZipFile zip = new ZipFile(file);
+			Enumeration<? extends ZipEntry> entries = zip.entries();
+			while ( entries.hasMoreElements() ) {
+				ZipEntry entry = entries.nextElement();
+				if ( entry.getName().endsWith(FORMAT_PARAM_VALUE) ) {
+					String fileName = request.getFolder() + File.separator + request.getFilename().substring(
+							request.getFilename().lastIndexOf(File.separator) + 1,
+							request.getFilename().lastIndexOf(".")) + "." + FORMAT_PARAM_VALUE;
+					saveInput(zip.getInputStream(entry), new File(fileName));
+					
+					OpenSubtitles.LOGGER.info("#####################################################################");
+					OpenSubtitles.LOGGER.info("# Sous-titre sauvegardé : "+fileName);
+					OpenSubtitles.LOGGER.info("#####################################################################");
+				}
+			}
+		} catch (IOException e) {
+			throw new OpenSubtitlesException("Erreur pendant la sauvegarde de l'URL '"+bestResult.getDownloadURL()+"'", e);
+		}
 	}
 	
 	/**

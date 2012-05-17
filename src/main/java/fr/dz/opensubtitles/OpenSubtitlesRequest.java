@@ -5,14 +5,10 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
-
 import fr.dz.opensubtitles.exception.OpenSubtitlesException;
 
 public class OpenSubtitlesRequest implements Serializable {
 	
-	private static final Logger LOGGER = Logger.getLogger(OpenSubtitlesRequest.class);
-
 	private static final long serialVersionUID = 1039194045321136919L;
 
 	// Les expressions régulières utilisées
@@ -95,16 +91,16 @@ public class OpenSubtitlesRequest implements Serializable {
 	 * Affichage des infos de debug
 	 */
 	private void debug(String file) {
-		LOGGER.debug("#####################################################################");
-		LOGGER.debug("# Requète : "+file+" (langue="+lang+")");
-		LOGGER.debug("#####################################################################");
-		LOGGER.debug(" - lang : "+lang);
-		LOGGER.debug(" - folder : "+folder);
-		LOGGER.debug(" - filename : "+filename);
-		LOGGER.debug(" - query : " + query);
-		LOGGER.debug(" - season : " + season);
-		LOGGER.debug(" - episode : " + episode);
-		LOGGER.debug(" - filesize : " + filesize);
+		OpenSubtitles.LOGGER.debug("#####################################################################");
+		OpenSubtitles.LOGGER.debug("# Requète : "+file+" (langue="+lang+")");
+		OpenSubtitles.LOGGER.debug("#####################################################################");
+		OpenSubtitles.LOGGER.debug(" - lang : "+lang);
+		OpenSubtitles.LOGGER.debug(" - folder : "+folder);
+		OpenSubtitles.LOGGER.debug(" - filename : "+filename);
+		OpenSubtitles.LOGGER.debug(" - query : " + query);
+		OpenSubtitles.LOGGER.debug(" - season : " + season);
+		OpenSubtitles.LOGGER.debug(" - episode : " + episode);
+		OpenSubtitles.LOGGER.debug(" - filesize : " + filesize);
 	}
 
 	/*

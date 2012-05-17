@@ -6,17 +6,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import fr.dz.opensubtitles.exception.OpenSubtitlesException;
 import fr.dz.opensubtitles.util.Levenshtein;
 
 public class OpenSubtitlesResult implements Serializable {
 
-	private static final Logger LOGGER = Logger.getLogger(OpenSubtitlesResult.class);
-	
 	private static final long serialVersionUID = 5630975519309879850L;
-	
 	
 	// Constantes
 	private static final String TRUSTED_IMAGE = "http://static.opensubtitles.org/gfx/icons/ranks/trusted.png";
@@ -224,7 +219,6 @@ public class OpenSubtitlesResult implements Serializable {
 			Integer fileNameScoring = DEFAULT_FILENAME_SCORING;
 			if ( getFileNames() != null ) {
 				for ( String filename : getFileNames() ) {
-					LOGGER.debug("request.getFilename()="+request.getFilename()+" ; filename="+filename);
 					distances.add(Levenshtein.distance(request.getFilename(), filename));
 				}
 			}
@@ -272,6 +266,17 @@ public class OpenSubtitlesResult implements Serializable {
 		public Integer getScoring() {
 			return scoring;
 		}
+
+		public void debug() {
+			OpenSubtitles.LOGGER.debug("   * Fichier concerné :");
+			OpenSubtitles.LOGGER.debug("     o id : "+id);
+			OpenSubtitles.LOGGER.debug("     o size : "+size);
+			OpenSubtitles.LOGGER.debug("     o scoring : "+scoring);
+			OpenSubtitles.LOGGER.debug("     o fileNames : ");
+			for ( String filename : getFileNames() ) {
+				OpenSubtitles.LOGGER.debug("         "+filename);
+			}
+		}
 	}
 	
 	/**
@@ -286,14 +291,17 @@ public class OpenSubtitlesResult implements Serializable {
 	 * Affichage des infos de debug
 	 */
 	private void debug() {
-		LOGGER.debug("#####################################################################");
-		LOGGER.debug("# Résultat : ");
-		LOGGER.debug("#####################################################################");
-		LOGGER.debug(" - id : " + id);
-		LOGGER.debug(" - downloadURL : " + downloadURL);
-		LOGGER.debug(" - files : " + files);
-		LOGGER.debug(" - trusted : " + trusted);
-		LOGGER.debug(" - scoring : " + scoring);
+		OpenSubtitles.LOGGER.debug("#####################################################################");
+		OpenSubtitles.LOGGER.debug("# Résultat trouvé : ");
+		OpenSubtitles.LOGGER.debug("#####################################################################");
+		OpenSubtitles.LOGGER.debug(" - id : " + id);
+		OpenSubtitles.LOGGER.debug(" - downloadURL : " + downloadURL);
+		OpenSubtitles.LOGGER.debug(" - files : ");
+		for ( OpenSubtitleResultFile file : files ) {
+			file.debug();
+		}
+		OpenSubtitles.LOGGER.debug(" - trusted : " + trusted);
+		OpenSubtitles.LOGGER.debug(" - scoring : " + scoring);
 	}
 	
 	/**
