@@ -28,6 +28,7 @@ public class OpenSubtitlesResult implements Serializable {
 	private static final String FILENAMES_BEFORE_STRING = "<a href='http://www.opensubtitles.org/addons/servead.php?weblang=fr&file=";
 	private static final Integer DEFAULT_FILENAME_SCORING = 100;
 	private static final Integer DEFAULT_FILESIZE_SCORING = 50;
+	private static final Integer DEFAULT_SCORING = 100;
 	private static final Integer FILENAME_COEFFICIENT = 5;
 	private static final Integer FILESIZE_COEFFICIENT = 2;
 	private static final Integer TRUSTED_COEFFICIENT = 95;
@@ -146,6 +147,9 @@ public class OpenSubtitlesResult implements Serializable {
 			scorings.add(file.getScoring());
 		}
 		this.scoring = Levenshtein.min(scorings.toArray(new Integer[0]));
+		if ( this.scoring == null ) {
+			this.scoring = DEFAULT_SCORING;
+		}
 		
 		// Si le fichier est trusted, on accorde 5% de bonus
 		if ( trusted ) {
