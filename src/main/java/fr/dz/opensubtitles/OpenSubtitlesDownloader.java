@@ -83,7 +83,7 @@ public class OpenSubtitlesDownloader {
 	 * Télécharge les premiers sous titres correspondants
 	 * @throws OpenSubtitlesException
 	 */
-	public void downloadFirstSubtitles() throws OpenSubtitlesException {
+	public boolean downloadFirstSubtitles() throws OpenSubtitlesException {
 		if ( queryResultPage == null ) {
 			throw new OpenSubtitlesException("Appeler hasSubtitles() avant d'appeler downloadFirstSubtitles()");
 		}
@@ -100,7 +100,12 @@ public class OpenSubtitlesDownloader {
 		}
 		
 		// Téléchargement du meilleur résultat
-		download(bestResult);
+		if ( bestResult != null ) {
+			download(bestResult);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
