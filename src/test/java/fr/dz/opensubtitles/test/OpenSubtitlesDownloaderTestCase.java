@@ -78,7 +78,7 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractOpenSubtitlesTest {
 		if ( downloader.hasSubtitles() ) {
 			downloader.downloadFirstSubtitles();
 		}
-		Assert.assertEquals("Nombre de sous-titres invalides pour "+SERIE_1_RESULT_FILENAME, 1, downloader.getSubtitlesResults().size());
+		Assert.assertEquals("Nombre de sous-titres invalides pour "+SERIE_1_RESULT_FILENAME, 2, downloader.getSubtitlesResults().size());
 	}
 	
 	@Test
@@ -91,6 +91,6 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractOpenSubtitlesTest {
 		if ( downloader.hasSubtitles() ) {
 			downloader.downloadFirstSubtitles();
 		}
-		Assert.assertEquals("Nombre de sous-titres invalides pour "+SERIE_2_RESULTS_FILENAME, 2, downloader.getSubtitlesResults().size());
+		Assert.assertEquals("Nombre de sous-titres invalides pour "+SERIE_2_RESULTS_FILENAME, 3, downloader.getSubtitlesResults().size());
 	}
 }

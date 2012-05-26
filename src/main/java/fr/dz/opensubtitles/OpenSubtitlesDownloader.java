@@ -217,7 +217,7 @@ public class OpenSubtitlesDownloader {
 	        connection.connect();
         	
 	        // Enregistrement du fichier
-			saveInput(connection.getInputStream(), file);
+			saveBinaryInput(connection.getInputStream(), file);
 		} catch (Exception e) {
 			throw new OpenSubtitlesException("Erreur pendant la sauvegarde de l'URL '"+url+"' dans le fichier : "+file, e);
 		} finally {
@@ -245,7 +245,7 @@ public class OpenSubtitlesDownloader {
 	 * @return
 	 * @throws OpenSubtitlesException 
 	 */
-	public static void saveInput(InputStream in, File file) throws OpenSubtitlesException {
+	public static void saveBinaryInput(InputStream in, File file) throws OpenSubtitlesException {
 		BufferedOutputStream out = null;
         try {
         	// Enregistrement du fichier
@@ -279,6 +279,48 @@ public class OpenSubtitlesDownloader {
 	}
 	
 	/**
+	 * Sauvegarde le contenu d'un input stream dans un fichier
+	 * @param in
+	 * @param file
+	 * @return
+	 * @throws OpenSubtitlesException 
+	 */
+	public static void saveUTF8Input(InputStream in, File file) throws OpenSubtitlesException {
+		BufferedWriter writer = null;
+		BufferedReader reader = null;
+        try {
+        	// Enregistrement du fichier
+	        reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "Cp1252"));
+			
+			// Enregistrement
+			String line;
+			while ( (line = reader.readLine()) != null ) {
+				writer.write(line);
+				writer.newLine();
+				writer.flush();
+			}
+		} catch (IOException e) {
+			throw new OpenSubtitlesException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
+		} finally {
+			if ( reader != null ) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					throw new OpenSubtitlesException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
+				}
+			}
+			if ( writer != null ) {
+				try {
+					writer.close();
+				} catch (IOException e) {
+					throw new OpenSubtitlesException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Télécharge le résultat passé en paramètre
 	 * @param bestResult
 	 * @throws OpenSubtitlesException 
@@ -298,7 +340,7 @@ public class OpenSubtitlesDownloader {
 					String fileName = request.getFolder() + File.separator + request.getFilename().substring(
 							request.getFilename().lastIndexOf(File.separator) + 1,
 							request.getFilename().lastIndexOf(".")) + "." + FORMAT_PARAM_VALUE;
-					saveInput(zip.getInputStream(entry), new File(fileName));
+					saveUTF8Input(zip.getInputStream(entry), new File(fileName));
 					
 					OpenSubtitles.LOGGER.info("#####################################################################");
 					OpenSubtitles.LOGGER.info("# Sous-titre sauvegardé : "+fileName);
