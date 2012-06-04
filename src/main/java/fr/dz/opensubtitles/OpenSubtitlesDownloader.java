@@ -43,6 +43,7 @@ public class OpenSubtitlesDownloader {
 	private static final String SUBTITLE_URL_PREFIX = "/fr/subtitles/";
 	private static final String SUBTITLE_ID_START = "</tr><tr onclick=\"servOC(";
 	private static final String SUBTITLE_ID_END = ",";
+	private static final String NFO_EXTENSION = "nfo";
 	
 	// La requète
 	private OpenSubtitlesRequest request;
@@ -333,19 +334,40 @@ public class OpenSubtitlesDownloader {
 			
 			// Extraction du fichier SRT
 			ZipFile zip = new ZipFile(file);
+			ZipEntry toExtract = null;
+			ZipEntry noNFO = null;
 			Enumeration<? extends ZipEntry> entries = zip.entries();
 			while ( entries.hasMoreElements() ) {
 				ZipEntry entry = entries.nextElement();
 				if ( entry.getName().endsWith(FORMAT_PARAM_VALUE) ) {
-					String fileName = request.getFolder() + File.separator + request.getFilename().substring(
-							request.getFilename().lastIndexOf(File.separator) + 1,
-							request.getFilename().lastIndexOf(".")) + "." + FORMAT_PARAM_VALUE;
-					saveUTF8Input(zip.getInputStream(entry), new File(fileName));
-					
-					OpenSubtitles.LOGGER.info("#####################################################################");
-					OpenSubtitles.LOGGER.info("# Sous-titre sauvegardé : "+fileName);
-					OpenSubtitles.LOGGER.info("#####################################################################");
+					toExtract = entry;
+					break;
 				}
+				if ( noNFO == null && ! entry.getName().endsWith(NFO_EXTENSION) ) {
+					noNFO = entry;
+				}
+			}
+
+			// Si on n'a pas trouvé de fichier avec la bonne extension
+			if ( toExtract == null ) {
+				// On prend le premier qui ne se termine pas en NFO
+				toExtract = noNFO;
+			}
+
+			// Extraction du fichier
+			if ( toExtract != null ) {
+				String fileName = request.getFolder() + File.separator + request.getFilename().substring(
+						request.getFilename().lastIndexOf(File.separator) + 1,
+						request.getFilename().lastIndexOf(".")) + "." + FORMAT_PARAM_VALUE;
+				saveUTF8Input(zip.getInputStream(toExtract), new File(fileName));
+				
+				OpenSubtitles.LOGGER.info("#####################################################################");
+				OpenSubtitles.LOGGER.info("# Sous-titre sauvegardé : "+fileName);
+				OpenSubtitles.LOGGER.info("#####################################################################");
+			} else {
+				OpenSubtitles.LOGGER.info("#####################################################################");
+				OpenSubtitles.LOGGER.info("# Aucun fichier de sous-titre trouvé.");
+				OpenSubtitles.LOGGER.info("#####################################################################");
 			}
 		} catch (IOException e) {
 			throw new OpenSubtitlesException("Erreur pendant la sauvegarde de l'URL '"+bestResult.getDownloadURL()+"'", e);
