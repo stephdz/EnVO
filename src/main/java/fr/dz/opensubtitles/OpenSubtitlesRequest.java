@@ -12,7 +12,7 @@ public class OpenSubtitlesRequest implements Serializable {
 	private static final long serialVersionUID = 1039194045321136919L;
 
 	// Les expressions régulières utilisées
-	private static final String SERIE_REG_EXP = "^([A-Za-z0-9 .]*)S([0-9]{1,2})E([0-9]{1,2}).*$";
+	private static final String SERIE_REG_EXP = "^([A-Za-z0-9 .]*)[Ss]([0-9]{1,2})[EeXx]([0-9]{1,2}).*$";
 	private static final int QUERY_GROUP = 1;
 	private static final int SEASON_GROUP = 2;
 	private static final int EPISODE_GROUP = 3;
