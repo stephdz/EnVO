@@ -7,8 +7,8 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fr.dz.opensubtitles.OpenSubtitlesDownloader;
 import fr.dz.opensubtitles.OpenSubtitlesRequest;
+import fr.dz.opensubtitles.sources.OpenSubtitlesDownloader;
 
 
 public class OpenSubtitlesDownloaderTestCase extends AbstractOpenSubtitlesTest {
@@ -65,7 +65,7 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractOpenSubtitlesTest {
 		Assert.assertEquals("URL", FILM_URL, downloader.getQueryURL().toString());
 		
 		// Test de la présence de sous-titres
-		Assert.assertFalse("Pas de sous titres attendus pour "+FILM_URL, downloader.hasSubtitles());
+		Assert.assertTrue("Sous titres attendus pour "+FILM_URL, downloader.hasSubtitles());
 	}
 	
 	@Test
@@ -91,6 +91,6 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractOpenSubtitlesTest {
 		if ( downloader.hasSubtitles() ) {
 			downloader.downloadFirstSubtitles();
 		}
-		Assert.assertEquals("Nombre de sous-titres invalides pour "+SERIE_2_RESULTS_FILENAME, 3, downloader.getSubtitlesResults().size());
+		Assert.assertEquals("Nombre de sous-titres invalides pour "+SERIE_2_RESULTS_FILENAME, 5, downloader.getSubtitlesResults().size());
 	}
 }
