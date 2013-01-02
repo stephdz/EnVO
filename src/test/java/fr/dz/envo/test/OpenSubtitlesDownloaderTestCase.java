@@ -7,6 +7,7 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import fr.dz.envo.AbstractSubtitlesSource;
 import fr.dz.envo.SubtitlesRequest;
 import fr.dz.envo.sources.OpenSubtitlesDownloader;
 
@@ -35,7 +36,8 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractEnVOTest {
 		
 		// Test de l'URL
 		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_1_RESULT_FILENAME);
-		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
+		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader();
+		downloader.init(request);
 		Assert.assertEquals("URL", SERIE_1_URL, downloader.getQueryURL().toString());
 		
 		// Test de la présence de sous-titres
@@ -48,7 +50,8 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractEnVOTest {
 		
 		// Test de l'URL
 		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_2_RESULTS_FILENAME);
-		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
+		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader();
+		downloader.init(request);
 		Assert.assertEquals("URL", SERIE_2_URL, downloader.getQueryURL().toString());
 		
 		// Test de la présence de sous-titres
@@ -61,7 +64,8 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractEnVOTest {
 		
 		// Test de l'URL
 		SubtitlesRequest request = new SubtitlesRequest(LANG, FILM_FILENAME);
-		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
+		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader();
+		downloader.init(request);
 		Assert.assertEquals("URL", FILM_URL, downloader.getQueryURL().toString());
 		
 		// Test de la présence de sous-titres
@@ -74,9 +78,10 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractEnVOTest {
 		
 		// Test depuis un fichier HTML résultat de hasSubtitles
 		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_1_RESULT_FILENAME);
-		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
+		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader();
+		downloader.init(request);
 		if ( downloader.hasSubtitles() ) {
-			downloader.downloadFirstSubtitles();
+			AbstractSubtitlesSource.downloadBestSubtitles(request, downloader.findSubtitles());
 		}
 		Assert.assertEquals("Nombre de sous-titres invalides pour "+SERIE_1_RESULT_FILENAME, 2, downloader.getSubtitlesResults().size());
 	}
@@ -87,9 +92,10 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractEnVOTest {
 		
 		// Test depuis un fichier HTML résultat de hasSubtitles
 		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_2_RESULTS_FILENAME);
-		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
+		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader();
+		downloader.init(request);
 		if ( downloader.hasSubtitles() ) {
-			downloader.downloadFirstSubtitles();
+			AbstractSubtitlesSource.downloadBestSubtitles(request, downloader.findSubtitles());
 		}
 		Assert.assertEquals("Nombre de sous-titres invalides pour "+SERIE_2_RESULTS_FILENAME, 5, downloader.getSubtitlesResults().size());
 	}

@@ -29,38 +29,36 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 	private List<SubtitlesResult> subtitlesResults;
 	
 	/**
-	 * Constructeur à partir d'une recherche
+	 * Constructeur par défaut
+	 */
+	public AbstractSubtitlesSource() {
+		super();
+	}
+	
+	/**
+	 * Initialisation à partir d'une recherche
 	 * @param request
 	 * @throws EnVOException
 	 */
-	public AbstractSubtitlesSource(SubtitlesRequest request) throws EnVOException {
+	@Override
+	public void init(SubtitlesRequest request) throws EnVOException {
 		setRequest(request);
 	}
 	
 	/*
-	 * METHODES ABSTRAITES
+	 * METHODES STATIQUES
 	 */
 	
 	/**
-	 * Récupère la liste des sous titres depuis la page de résultat de requète
+	 * Télécharge les sous-titres correspondants le mieux
 	 * @return
-	 * @throws EnVOException 
+	 * @throws EnVOException
 	 */
-	protected abstract List<SubtitlesResult> getSubtitlesURLs() throws EnVOException;
-	
-	/*
-	 * METHODES PUBLIQUES
-	 */
-	
-	@Override
-	public boolean downloadFirstSubtitles() throws EnVOException {
-		
-		// Récupération de la liste des URLs de sous-titres 
-		subtitlesResults = getSubtitlesURLs();
+	public static boolean downloadBestSubtitles(SubtitlesRequest request, List<SubtitlesResult> results) throws EnVOException {
 		
 		// Choix du meilleur scoring (le plus petit)
 		SubtitlesResult bestResult = null;
-		for ( SubtitlesResult result : subtitlesResults ) {
+		for ( SubtitlesResult result : results ) {
 			if ( bestResult == null || result.getScoring() < bestResult.getScoring() ) {
 				bestResult = result;
 			}
@@ -68,7 +66,7 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 		
 		// Téléchargement du meilleur résultat
 		if ( bestResult != null ) {
-			download(bestResult);
+			download(request, bestResult);
 			return true;
 		} else {
 			return false;
@@ -77,13 +75,14 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 	
 	/**
 	 * Télécharge le résultat passé en paramètre
+	 * @param request
 	 * @param bestResult
 	 * @throws EnVOException 
 	 */
-	protected void download(SubtitlesResult bestResult) throws EnVOException {
-		String fileName = getRequest().getFolder() + File.separator + getRequest().getFilename().substring(
-				getRequest().getFilename().lastIndexOf(File.separator) + 1,
-				getRequest().getFilename().lastIndexOf(".")) + "." + SRT_EXTENSION;
+	public static void download(SubtitlesRequest request, SubtitlesResult bestResult) throws EnVOException {
+		String fileName = request.getFolder() + File.separator + request.getFilename().substring(
+				request.getFilename().lastIndexOf(File.separator) + 1,
+				request.getFilename().lastIndexOf(".")) + "." + SRT_EXTENSION;
 		download(bestResult.getDownloadURL(), fileName);
 	}
 	
@@ -126,7 +125,8 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 				IOUtils.encodeInputStream(zip.getInputStream(toExtract), new File(destinationFile), TARGET_ENCODING);
 				
 				EnVO.LOGGER.info("#####################################################################");
-				EnVO.LOGGER.info("# Sous-titre sauvegardé : "+destinationFile);
+				EnVO.LOGGER.info("# Sous-titre sauvegardé : "+url);
+				EnVO.LOGGER.info("# Fichier : "+destinationFile);
 				EnVO.LOGGER.info("#####################################################################");
 			} else {
 				EnVO.LOGGER.info("#####################################################################");

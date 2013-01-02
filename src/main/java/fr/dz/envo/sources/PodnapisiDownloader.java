@@ -10,6 +10,7 @@ import java.util.List;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import fr.dz.envo.AbstractSubtitlesSource;
 import fr.dz.envo.EnVO;
@@ -18,6 +19,10 @@ import fr.dz.envo.SubtitlesResult;
 import fr.dz.envo.SubtitlesResultFile;
 import fr.dz.envo.exception.EnVOException;
 
+/**
+ * Recherche sur podnapisi.net
+ */
+@Service("Podnapisi")
 public class PodnapisiDownloader extends AbstractSubtitlesSource {
 	
 	// Constantes pour construire l'URL de recherche
@@ -48,13 +53,9 @@ public class PodnapisiDownloader extends AbstractSubtitlesSource {
 	// Le document contenu de la page résultat de recherche
 	private Document queryResultDocument;
 	
-	/**
-	 * Constructeur à partir d'une recherche dans Podnaposi
-	 * @param request
-	 * @throws EnVOException
-	 */
-	public PodnapisiDownloader(SubtitlesRequest request) throws EnVOException {
-		super(request);
+	@Override
+	public void init(SubtitlesRequest request) throws EnVOException {
+		super.init(request);
 		
 		// Construction de l'URL de la requète
 		StringBuffer queryURLBuffer = new StringBuffer();
@@ -105,7 +106,7 @@ public class PodnapisiDownloader extends AbstractSubtitlesSource {
 	}
 	
 	@Override
-	protected List<SubtitlesResult> getSubtitlesURLs() throws EnVOException {
+	public List<SubtitlesResult> findSubtitles() throws EnVOException {
 		List<SubtitlesResult> result = new ArrayList<SubtitlesResult>();
 		
 		// Recherche des URL pour chaque résultat de recherche
@@ -119,6 +120,7 @@ public class PodnapisiDownloader extends AbstractSubtitlesSource {
 			}
 		}
 		
+		setSubtitlesResults(result);
 		return result;
 	}
 	

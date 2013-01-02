@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import fr.dz.envo.AbstractSubtitlesSource;
 import fr.dz.envo.EnVO;
@@ -20,6 +21,10 @@ import fr.dz.envo.SubtitlesResult;
 import fr.dz.envo.SubtitlesResultFile;
 import fr.dz.envo.exception.EnVOException;
 
+/**
+ * Recherche sur opensubtitles.org
+ */
+@Service("OpenSubtitles")
 public class OpenSubtitlesDownloader extends AbstractSubtitlesSource {
 	
 	// Constantes pour construire l'URL de recherche
@@ -53,13 +58,9 @@ public class OpenSubtitlesDownloader extends AbstractSubtitlesSource {
 	// Le document contenu de la page résultat de recherche
 	private Document queryResultDocument;
 	
-	/**
-	 * Constructeur à partir d'une recherche dans OpenSubtitles
-	 * @param request
-	 * @throws EnVOException
-	 */
-	public OpenSubtitlesDownloader(SubtitlesRequest request) throws EnVOException {
-		super(request);
+	@Override
+	public void init(SubtitlesRequest request) throws EnVOException {
+		super.init(request);
 		
 		// Construction de l'URL de la requète
 		StringBuffer queryURLBuffer = new StringBuffer();
@@ -110,7 +111,7 @@ public class OpenSubtitlesDownloader extends AbstractSubtitlesSource {
 	}
 	
 	@Override
-	protected List<SubtitlesResult> getSubtitlesURLs() throws EnVOException {
+	public List<SubtitlesResult> findSubtitles() throws EnVOException {
 		List<SubtitlesResult> result = new ArrayList<SubtitlesResult>();
 		
 		// Cas 1 : un seul résultat, on est déjà sur la bonne page
@@ -131,6 +132,7 @@ public class OpenSubtitlesDownloader extends AbstractSubtitlesSource {
 			}
 		}
 		
+		setSubtitlesResults(result);
 		return result;
 	}
 
@@ -199,8 +201,6 @@ public class OpenSubtitlesDownloader extends AbstractSubtitlesSource {
 			List<String> filenames = new ArrayList<String>();
 			try {
 				Elements files = getJsoupDocument(getURLContent(new URL(FILENAMES_URL_PREFIX+fileId))).select("a");
-				EnVO.LOGGER.debug("Fichiers de "+fileId+" : "+files);
-				EnVO.LOGGER.debug("Fichiers de "+fileId+" : "+files.size());
 				for ( Element file : files ) {
 					filenames.add(file.text());
 				}

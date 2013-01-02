@@ -7,6 +7,7 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import fr.dz.envo.AbstractSubtitlesSource;
 import fr.dz.envo.SubtitlesRequest;
 import fr.dz.envo.sources.PodnapisiDownloader;
 
@@ -34,7 +35,8 @@ public class PodnapisiDownloaderTestCase extends AbstractEnVOTest {
 		
 		// Test de l'URL
 		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_RESULT_FILENAME);
-		PodnapisiDownloader downloader = new PodnapisiDownloader(request);
+		PodnapisiDownloader downloader = new PodnapisiDownloader();
+		downloader.init(request);
 		Assert.assertEquals("URL", SERIE_URL, downloader.getQueryURL().toString());
 		
 		// Test de la présence de sous-titres
@@ -47,7 +49,8 @@ public class PodnapisiDownloaderTestCase extends AbstractEnVOTest {
 		
 		// Test de l'URL
 		SubtitlesRequest request = new SubtitlesRequest(LANG, FILM_FILENAME);
-		PodnapisiDownloader downloader = new PodnapisiDownloader(request);
+		PodnapisiDownloader downloader = new PodnapisiDownloader();
+		downloader.init(request);
 		Assert.assertEquals("URL", FILM_URL, downloader.getQueryURL().toString());
 		
 		// Test de la présence de sous-titres
@@ -60,9 +63,10 @@ public class PodnapisiDownloaderTestCase extends AbstractEnVOTest {
 		
 		// Test depuis un fichier HTML résultat de hasSubtitles
 		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_RESULT_FILENAME);
-		PodnapisiDownloader downloader = new PodnapisiDownloader(request);
+		PodnapisiDownloader downloader = new PodnapisiDownloader();
+		downloader.init(request);
 		if ( downloader.hasSubtitles() ) {
-			downloader.downloadFirstSubtitles();
+			AbstractSubtitlesSource.downloadBestSubtitles(request, downloader.findSubtitles());
 		}
 		Assert.assertEquals("Nombre de sous-titres invalides pour "+SERIE_RESULT_FILENAME, 5, downloader.getSubtitlesResults().size());
 	}

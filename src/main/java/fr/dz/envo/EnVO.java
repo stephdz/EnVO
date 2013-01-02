@@ -2,12 +2,14 @@ package fr.dz.envo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import fr.dz.envo.exception.EnVOException;
-import fr.dz.envo.sources.OpenSubtitlesDownloader;
 
 public class EnVO {
 	
@@ -40,11 +42,22 @@ public class EnVO {
 			// Création de la requète
 			SubtitlesRequest request = new SubtitlesRequest(options.get(0), options.get(1));
 			
+			// Initialisation du contexte Spring pour récupérer les downloaders
+			ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+			Map<String,SubtitlesSource> sources = context.getBeansOfType(SubtitlesSource.class);
+			
 			// Recherche des sous titres existants
-			OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
-			if ( downloader.hasSubtitles() ) {
-				downloader.downloadFirstSubtitles();
+			List<SubtitlesResult> results = new ArrayList<SubtitlesResult>();
+			for ( SubtitlesSource source : sources.values() ) {
+				source.init(request);
+				if ( source.hasSubtitles() ) {
+					results.addAll(source.findSubtitles());
+				}
 			}
+			
+			// Téléchargement des meilleurs sous-titres
+			AbstractSubtitlesSource.downloadBestSubtitles(request, results);
+			
 		} catch (EnVOException e) {
 			System.err.println(e.getMessage());
 		}
