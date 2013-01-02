@@ -135,7 +135,6 @@ public class PodnapisiDownloader extends AbstractOpenSubtitlesSource {
 	}
 	
 	/**
-	 * TODO A adapter
 	 * Crée un résultat à partir d'un contenu de page de sous-titre
 	 * @param subtitlePage
 	 * @return
@@ -189,7 +188,7 @@ public class PodnapisiDownloader extends AbstractOpenSubtitlesSource {
 	}
 	
 	/**
-	 * Rétourne l'id de la lanque sur Podnapisi à partir de son code
+	 * Retourne l'id de la lanque sur Podnapisi à partir de son code
 	 * @param lang
 	 * @return
 	 */
