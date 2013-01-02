@@ -1,6 +1,6 @@
 #!/bin/bash
 ##############################################################################################
-# open-subtitles.sh : Téléchargement des sous-titres sur opensubtitles.org
+# envo.sh : Téléchargement des sous-titres sur Internet
 # Paramètres :
 #  - $1 : options (-v pour plus de logs, -w pour avoir la progression dans un popup)
 #  - $2 : langue (fre pour français)
@@ -8,7 +8,7 @@
 ##############################################################################################
 
 # Constantes
-OPEN_SUBTITLES_JAR=$(dirname $0)/../OpenSubtitles.jar
+ENVO_JAR=$(dirname $0)/../EnVO.jar
 
 # Recherche des paramètres
 WINDOWED="false"
@@ -36,7 +36,7 @@ VIDEO=$2
 
 # Exécution du Jar avec les paramètres fournis
 if [ "$WINDOWED" = "true" ]; then
-        java -jar "$OPEN_SUBTITLES_JAR" $OPTIONS "$LANG" "$VIDEO" | sed 's/#/-/g'  | zenity --progress \
+        java -jar "$ENVO_JAR" $OPTIONS "$LANG" "$VIDEO" | sed 's/#/-/g'  | zenity --progress \
                 --title="Recherche de sous-titres" \
                 --text="Recherche en cours..." \
                 --percentage=0 \
@@ -44,6 +44,6 @@ if [ "$WINDOWED" = "true" ]; then
                 --auto-close \
                 --no-cancel
 else
-        java -jar "$OPEN_SUBTITLES_JAR" $OPTIONS "$LANG" "$VIDEO"
+        java -jar "$ENVO_JAR" $OPTIONS "$LANG" "$VIDEO"
 fi
 

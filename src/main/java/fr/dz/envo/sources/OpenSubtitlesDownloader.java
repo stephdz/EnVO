@@ -1,4 +1,4 @@
-package fr.dz.opensubtitles.sources;
+package fr.dz.envo.sources;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -13,13 +13,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import fr.dz.opensubtitles.OpenSubtitles;
-import fr.dz.opensubtitles.OpenSubtitlesRequest;
-import fr.dz.opensubtitles.OpenSubtitlesResult;
-import fr.dz.opensubtitles.OpenSubtitlesResultFile;
-import fr.dz.opensubtitles.exception.OpenSubtitlesException;
+import fr.dz.envo.AbstractSubtitlesSource;
+import fr.dz.envo.EnVO;
+import fr.dz.envo.SubtitlesRequest;
+import fr.dz.envo.SubtitlesResult;
+import fr.dz.envo.SubtitlesResultFile;
+import fr.dz.envo.exception.EnVOException;
 
-public class OpenSubtitlesDownloader extends AbstractOpenSubtitlesSource {
+public class OpenSubtitlesDownloader extends AbstractSubtitlesSource {
 	
 	// Constantes pour construire l'URL de recherche
 	public static final String OPEN_SUBTITLES_DOMAIN = "http://www.opensubtitles.org";
@@ -55,9 +56,9 @@ public class OpenSubtitlesDownloader extends AbstractOpenSubtitlesSource {
 	/**
 	 * Constructeur à partir d'une recherche dans OpenSubtitles
 	 * @param request
-	 * @throws OpenSubtitlesException
+	 * @throws EnVOException
 	 */
-	public OpenSubtitlesDownloader(OpenSubtitlesRequest request) throws OpenSubtitlesException {
+	public OpenSubtitlesDownloader(SubtitlesRequest request) throws EnVOException {
 		super(request);
 		
 		// Construction de l'URL de la requète
@@ -66,7 +67,7 @@ public class OpenSubtitlesDownloader extends AbstractOpenSubtitlesSource {
 		if ( request.getLang() != null ) {
 			appendParameter(queryURLBuffer, LANGUAGE_PARAM_NAME, request.getLang());
 		} else {
-			throw new OpenSubtitlesException("La langue est obligatoire pour le fichier "+request.getFilename());
+			throw new EnVOException("La langue est obligatoire pour le fichier "+request.getFilename());
 		}
 		if ( request.getSeason() != null ) {
 			appendParameter(queryURLBuffer, SEASON_PARAM_NAME, request.getSeason());
@@ -79,24 +80,24 @@ public class OpenSubtitlesDownloader extends AbstractOpenSubtitlesSource {
 			try {
 				appendParameter(queryURLBuffer, MOVIE_PARAM_NAME, URLEncoder.encode(request.getQuery(), "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
-				throw new OpenSubtitlesException("Erreur pendant l'encodage de '"+request.getQuery()+"' pour l'URL", e);
+				throw new EnVOException("Erreur pendant l'encodage de '"+request.getQuery()+"' pour l'URL", e);
 			}
 		} else {
-			throw new OpenSubtitlesException("La requète est obligatoire pour le fichier "+request.getFilename());
+			throw new EnVOException("La requète est obligatoire pour le fichier "+request.getFilename());
 		}
 		try {
 			this.queryURL = new URL(queryURLBuffer.toString());
 		} catch (MalformedURLException e) {
-			throw new OpenSubtitlesException("URL générée invalide : "+queryURLBuffer.toString(), e);
+			throw new EnVOException("URL générée invalide : "+queryURLBuffer.toString(), e);
 		}
 	}
 
 	@Override
-	public boolean hasSubtitles() throws OpenSubtitlesException {
+	public boolean hasSubtitles() throws EnVOException {
 		
-		OpenSubtitles.LOGGER.debug("#####################################################################");
-		OpenSubtitles.LOGGER.debug("# Exécution de la requète : "+queryURL);
-		OpenSubtitles.LOGGER.debug("#####################################################################");
+		EnVO.LOGGER.debug("#####################################################################");
+		EnVO.LOGGER.debug("# Exécution de la requète : "+queryURL);
+		EnVO.LOGGER.debug("#####################################################################");
 		
         // Récupération de la page de résultat de la requète
         this.queryResultPage = getURLContent(queryURL);
@@ -109,8 +110,8 @@ public class OpenSubtitlesDownloader extends AbstractOpenSubtitlesSource {
 	}
 	
 	@Override
-	protected List<OpenSubtitlesResult> getSubtitlesURLs() throws OpenSubtitlesException {
-		List<OpenSubtitlesResult> result = new ArrayList<OpenSubtitlesResult>();
+	protected List<SubtitlesResult> getSubtitlesURLs() throws EnVOException {
+		List<SubtitlesResult> result = new ArrayList<SubtitlesResult>();
 		
 		// Cas 1 : un seul résultat, on est déjà sur la bonne page
 		if ( isSubtitlesPage(queryResultDocument) ) {
@@ -125,7 +126,7 @@ public class OpenSubtitlesDownloader extends AbstractOpenSubtitlesSource {
 				try {
 					result.add(createResult(getURLContent(new URL(url))));
 				} catch (MalformedURLException e) {
-					throw new OpenSubtitlesException("URL invalide : "+url);
+					throw new EnVOException("URL invalide : "+url);
 				}
 			}
 		}
@@ -160,8 +161,8 @@ public class OpenSubtitlesDownloader extends AbstractOpenSubtitlesSource {
 	 * @param subtitlePage
 	 * @return
 	 */
-	protected OpenSubtitlesResult createResult(String subtitlePage) throws OpenSubtitlesException {
-		OpenSubtitlesResult result = new OpenSubtitlesResult();
+	protected SubtitlesResult createResult(String subtitlePage) throws EnVOException {
+		SubtitlesResult result = new SubtitlesResult();
 		Document subtitleDocument = getJsoupDocument(subtitlePage);
 		
 		// Récupération de l'id (dernière partie de l'URL)
@@ -173,7 +174,7 @@ public class OpenSubtitlesDownloader extends AbstractOpenSubtitlesSource {
 		try {
 			result.setDownloadURL(new URL(OPEN_SUBTITLES_DOMAIN+url));
 		} catch (MalformedURLException e) {
-			throw new OpenSubtitlesException("URL invalide : "+OPEN_SUBTITLES_DOMAIN+url, e);
+			throw new EnVOException("URL invalide : "+OPEN_SUBTITLES_DOMAIN+url, e);
 		}
 		
 		// Récupération des fichiers correspondants
@@ -198,17 +199,17 @@ public class OpenSubtitlesDownloader extends AbstractOpenSubtitlesSource {
 			List<String> filenames = new ArrayList<String>();
 			try {
 				Elements files = getJsoupDocument(getURLContent(new URL(FILENAMES_URL_PREFIX+fileId))).select("a");
-				OpenSubtitles.LOGGER.debug("Fichiers de "+fileId+" : "+files);
-				OpenSubtitles.LOGGER.debug("Fichiers de "+fileId+" : "+files.size());
+				EnVO.LOGGER.debug("Fichiers de "+fileId+" : "+files);
+				EnVO.LOGGER.debug("Fichiers de "+fileId+" : "+files.size());
 				for ( Element file : files ) {
 					filenames.add(file.text());
 				}
 			} catch ( Exception e ) {
-				throw new OpenSubtitlesException("Impossible de récupérer les noms de fichiers depuis : "+FILENAMES_URL_PREFIX+fileId, e);
+				throw new EnVOException("Impossible de récupérer les noms de fichiers depuis : "+FILENAMES_URL_PREFIX+fileId, e);
 			}
 			
 			// Création du fichier résultat
-			OpenSubtitlesResultFile file = new OpenSubtitlesResultFile();
+			SubtitlesResultFile file = new SubtitlesResultFile();
 			file.setId(fileId);
 			file.setSize(size);
 			file.setFileNames(filenames);
@@ -216,7 +217,7 @@ public class OpenSubtitlesDownloader extends AbstractOpenSubtitlesSource {
 		}
 		
 		// Récupération de l'info "Posteur de confiance"
-		// FIXME Gérer les différents statuts d'OpenSubtitles
+		// FIXME Gérer les différents statuts d'EnVO
 		result.setTrusted(subtitlePage.indexOf(TRUSTED_IMAGE) != -1);
 		
 		// Scoring

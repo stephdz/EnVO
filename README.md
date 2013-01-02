@@ -1,7 +1,7 @@
-OpenSubtitles
-=============
+EnVO
+====
 
-Utilitaire pour récupérer des sous titres simplement en ligne de commande depuis OpenSubtitles.org
+Utilitaire pour récupérer des sous titres simplement en ligne de commande depuis différentes sources sur Internet
 
 v1.1 :
 ======

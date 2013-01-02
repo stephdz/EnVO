@@ -1,4 +1,4 @@
-package fr.dz.opensubtitles.test;
+package fr.dz.envo.test;
 
 import java.io.File;
 import java.net.URL;
@@ -6,10 +6,10 @@ import java.net.URL;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fr.dz.opensubtitles.sources.AbstractOpenSubtitlesSource;
+import fr.dz.envo.AbstractSubtitlesSource;
 
 
-public class EncodingTestCase extends AbstractOpenSubtitlesTest {
+public class EncodingTestCase extends AbstractEnVOTest {
 
 	// Constantes
 	private static final String FILE_PREFIX = "target/test-files/";
@@ -27,24 +27,24 @@ public class EncodingTestCase extends AbstractOpenSubtitlesTest {
 	@Test
 	public void testOpenSubtitlesIso88591() throws Exception {
 		debug();
-		AbstractOpenSubtitlesSource.download(new URL(OPENSUBTITLES_ISO_8859_1_URL), FILE_PREFIX + "open_subtitles_iso.srt");
+		AbstractSubtitlesSource.download(new URL(OPENSUBTITLES_ISO_8859_1_URL), FILE_PREFIX + "open_subtitles_iso.srt");
 	}
 	
 	@Test
 	public void testOpenSubtitlesUTF8() throws Exception {
 		debug();
-		AbstractOpenSubtitlesSource.download(new URL(OPENSUBTITLES_UTF_8_URL), FILE_PREFIX + "open_subtitles_utf8.srt");
+		AbstractSubtitlesSource.download(new URL(OPENSUBTITLES_UTF_8_URL), FILE_PREFIX + "open_subtitles_utf8.srt");
 	}
 	
 	@Test
 	public void testPodnapisiUTF8() throws Exception {
 		debug();
-		AbstractOpenSubtitlesSource.download(new URL(PODNAPISI_ISO_8859_1_URL), FILE_PREFIX + "podnapisi_utf8.srt");
+		AbstractSubtitlesSource.download(new URL(PODNAPISI_ISO_8859_1_URL), FILE_PREFIX + "podnapisi_utf8.srt");
 	}
 	
 	@Test
 	public void testPodnapisiIso88591() throws Exception {
 		debug();
-		AbstractOpenSubtitlesSource.download(new URL(PODNAPISI_UTF_8_URL), FILE_PREFIX + "podnapisi_iso.srt");
+		AbstractSubtitlesSource.download(new URL(PODNAPISI_UTF_8_URL), FILE_PREFIX + "podnapisi_iso.srt");
 	}
 }

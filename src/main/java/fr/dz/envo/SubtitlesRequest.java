@@ -1,13 +1,13 @@
-package fr.dz.opensubtitles;
+package fr.dz.envo;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fr.dz.opensubtitles.exception.OpenSubtitlesException;
+import fr.dz.envo.exception.EnVOException;
 
-public class OpenSubtitlesRequest implements Serializable {
+public class SubtitlesRequest implements Serializable {
 	
 	private static final long serialVersionUID = 1039194045321136919L;
 
@@ -30,9 +30,9 @@ public class OpenSubtitlesRequest implements Serializable {
 	 * Constructeur
 	 * @param lang La langue
 	 * @param file Le fichier pour lequel il faut chercher des sous-titres
-	 * @throws OpenSubtitlesException
+	 * @throws EnVOException
 	 */
-	public OpenSubtitlesRequest(String lang, String file) {
+	public SubtitlesRequest(String lang, String file) {
 		this.lang = lang;
 		init(file);
 	}
@@ -91,16 +91,16 @@ public class OpenSubtitlesRequest implements Serializable {
 	 * Affichage des infos de debug
 	 */
 	private void debug(String file) {
-		OpenSubtitles.LOGGER.debug("#####################################################################");
-		OpenSubtitles.LOGGER.debug("# Requète : "+file+" (langue="+lang+")");
-		OpenSubtitles.LOGGER.debug("#####################################################################");
-		OpenSubtitles.LOGGER.debug(" - lang : "+lang);
-		OpenSubtitles.LOGGER.debug(" - folder : "+folder);
-		OpenSubtitles.LOGGER.debug(" - filename : "+filename);
-		OpenSubtitles.LOGGER.debug(" - query : " + query);
-		OpenSubtitles.LOGGER.debug(" - season : " + season);
-		OpenSubtitles.LOGGER.debug(" - episode : " + episode);
-		OpenSubtitles.LOGGER.debug(" - filesize : " + filesize);
+		EnVO.LOGGER.debug("#####################################################################");
+		EnVO.LOGGER.debug("# Requète : "+file+" (langue="+lang+")");
+		EnVO.LOGGER.debug("#####################################################################");
+		EnVO.LOGGER.debug(" - lang : "+lang);
+		EnVO.LOGGER.debug(" - folder : "+folder);
+		EnVO.LOGGER.debug(" - filename : "+filename);
+		EnVO.LOGGER.debug(" - query : " + query);
+		EnVO.LOGGER.debug(" - season : " + season);
+		EnVO.LOGGER.debug(" - episode : " + episode);
+		EnVO.LOGGER.debug(" - filesize : " + filesize);
 	}
 
 	/*

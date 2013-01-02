@@ -1,4 +1,4 @@
-package fr.dz.opensubtitles;
+package fr.dz.envo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,18 +6,18 @@ import java.util.List;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import fr.dz.opensubtitles.exception.OpenSubtitlesException;
-import fr.dz.opensubtitles.sources.OpenSubtitlesDownloader;
+import fr.dz.envo.exception.EnVOException;
+import fr.dz.envo.sources.OpenSubtitlesDownloader;
 
-public class OpenSubtitles {
+public class EnVO {
 	
-	public static final Logger LOGGER = Logger.getLogger(OpenSubtitles.class.getPackage().getName());
+	public static final Logger LOGGER = Logger.getLogger(EnVO.class.getPackage().getName());
 
 	// Constantes
 	public static final String VERBOSE_OPTION = "-v";
 
 	/**
-	 * Utilitaire de téléchargement de sous-titres depuis OpenSubtitles
+	 * Utilitaire de téléchargement de sous-titres depuis EnVO
 	 * @param args Arguments : <options> <langue> <nom_de_fichier>
 	 */
 	public static void main(String[] args) {
@@ -38,14 +38,14 @@ public class OpenSubtitles {
 		
 		try {
 			// Création de la requète
-			OpenSubtitlesRequest request = new OpenSubtitlesRequest(options.get(0), options.get(1));
+			SubtitlesRequest request = new SubtitlesRequest(options.get(0), options.get(1));
 			
 			// Recherche des sous titres existants
 			OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
 			if ( downloader.hasSubtitles() ) {
 				downloader.downloadFirstSubtitles();
 			}
-		} catch (OpenSubtitlesException e) {
+		} catch (EnVOException e) {
 			System.err.println(e.getMessage());
 		}
 	}

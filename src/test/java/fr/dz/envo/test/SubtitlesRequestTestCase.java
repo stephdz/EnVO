@@ -1,4 +1,4 @@
-package fr.dz.opensubtitles.test;
+package fr.dz.envo.test;
 
 import java.io.File;
 
@@ -7,9 +7,9 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fr.dz.opensubtitles.OpenSubtitlesRequest;
+import fr.dz.envo.SubtitlesRequest;
 
-public class OpenSubtitlesRequestTestCase extends AbstractOpenSubtitlesTest {
+public class SubtitlesRequestTestCase extends AbstractEnVOTest {
 
 	// Constantes
 	private static final String LANG = "fre";
@@ -30,7 +30,7 @@ public class OpenSubtitlesRequestTestCase extends AbstractOpenSubtitlesTest {
 	@Test
 	public void testNull() throws Exception {
 		debug();
-		OpenSubtitlesRequest request = new OpenSubtitlesRequest(null, null);
+		SubtitlesRequest request = new SubtitlesRequest(null, null);
 		Assert.assertNull("Lang", request.getLang());
 		Assert.assertNull("File", request.getFilename());
 		Assert.assertNull("Query", request.getQuery());
@@ -42,7 +42,7 @@ public class OpenSubtitlesRequestTestCase extends AbstractOpenSubtitlesTest {
 	@Test
 	public void testNonExistingSerieFile() throws Exception {
 		debug();
-		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_FILENAME);
+		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_FILENAME);
 		Assert.assertEquals("Lang", LANG, request.getLang());
 		Assert.assertEquals("File", SERIE_FILENAME, FILE_PREFIX + request.getFilename());
 		Assert.assertEquals("Query", SERIE, request.getQuery());
@@ -54,7 +54,7 @@ public class OpenSubtitlesRequestTestCase extends AbstractOpenSubtitlesTest {
 	@Test
 	public void testNonExistingSerieFilePrefix() throws Exception {
 		debug();
-		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, "/home/steph/"+SERIE_FILENAME);
+		SubtitlesRequest request = new SubtitlesRequest(LANG, "/home/steph/"+SERIE_FILENAME);
 		Assert.assertEquals("Lang", LANG, request.getLang());
 		Assert.assertEquals("File", SERIE_FILENAME, FILE_PREFIX + request.getFilename());
 		Assert.assertEquals("Query", SERIE, request.getQuery());
@@ -66,7 +66,7 @@ public class OpenSubtitlesRequestTestCase extends AbstractOpenSubtitlesTest {
 	@Test
 	public void testNonExistingNonSerieFile() throws Exception {
 		debug();
-		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, FILM_FILENAME);
+		SubtitlesRequest request = new SubtitlesRequest(LANG, FILM_FILENAME);
 		Assert.assertEquals("Lang", LANG, request.getLang());
 		Assert.assertEquals("File", FILM_FILENAME, FILE_PREFIX + request.getFilename());
 		Assert.assertEquals("Query", FILM, request.getQuery());

@@ -1,4 +1,4 @@
-package fr.dz.opensubtitles.util;
+package fr.dz.envo.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -18,7 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.mozilla.universalchardet.UniversalDetector;
 
-import fr.dz.opensubtitles.exception.OpenSubtitlesException;
+import fr.dz.envo.exception.EnVOException;
 
 public class IOUtils {
 	
@@ -31,9 +31,9 @@ public class IOUtils {
 	 * @param file
 	 * @param srcEncoding
 	 * @param targetEncoding
-	 * @throws OpenSubtitlesException 
+	 * @throws EnVOException 
 	 */
-	public static void encodeInputStream(InputStream in, File file, String targetEncoding) throws OpenSubtitlesException {
+	public static void encodeInputStream(InputStream in, File file, String targetEncoding) throws EnVOException {
 		String sourceEncoding = IOUtils.detectEncodingAndSave(in, file);
 		if ( ! StringUtils.isEmpty(sourceEncoding) && ! sourceEncoding.equals(targetEncoding) ) {
 			IOUtils.changeEncoding(file, sourceEncoding, targetEncoding);
@@ -45,9 +45,9 @@ public class IOUtils {
 	 * @param file
 	 * @param srcEncoding
 	 * @param targetEncoding
-	 * @throws OpenSubtitlesException 
+	 * @throws EnVOException 
 	 */
-	public static void changeEncoding(File file, String srcEncoding, String targetEncoding) throws OpenSubtitlesException {
+	public static void changeEncoding(File file, String srcEncoding, String targetEncoding) throws EnVOException {
 		try {
 			String content = FileUtils.readFileToString(file, srcEncoding);
 			
@@ -59,7 +59,7 @@ public class IOUtils {
 			
 	        FileUtils.write(file, targetContent, targetEncoding);
 		} catch(IOException e) {
-			throw new OpenSubtitlesException("Erreur pendant la conversion du fichier "+file+" en "+targetEncoding, e);
+			throw new EnVOException("Erreur pendant la conversion du fichier "+file+" en "+targetEncoding, e);
 		}
 	}
 
@@ -68,9 +68,9 @@ public class IOUtils {
 	 * @param in
 	 * @param file
 	 * @return
-	 * @throws OpenSubtitlesException 
+	 * @throws EnVOException 
 	 */
-	public static void saveInputStream(InputStream in, File file) throws OpenSubtitlesException {
+	public static void saveInputStream(InputStream in, File file) throws EnVOException {
 		BufferedOutputStream out = null;
 	    try {
 	    	// Enregistrement du fichier
@@ -84,20 +84,20 @@ public class IOUtils {
 				out.write(buffer, 0, nbRead);
 			}
 		} catch (IOException e) {
-			throw new OpenSubtitlesException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
+			throw new EnVOException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
 		} finally {
 			if ( in != null ) {
 				try {
 					in.close();
 				} catch (IOException e) {
-					throw new OpenSubtitlesException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
+					throw new EnVOException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
 				}
 			}
 			if ( out != null ) {
 				try {
 					out.close();
 				} catch (IOException e) {
-					throw new OpenSubtitlesException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
+					throw new EnVOException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
 				}
 			}
 		}
@@ -108,9 +108,9 @@ public class IOUtils {
 	 * @param url
 	 * @param file
 	 * @return
-	 * @throws OpenSubtitlesException 
+	 * @throws EnVOException 
 	 */
-	public static void saveURL(URL url, File file) throws OpenSubtitlesException {
+	public static void saveURL(URL url, File file) throws EnVOException {
 		BufferedInputStream in = null;
 		BufferedOutputStream out = null;
 	    try {
@@ -122,20 +122,20 @@ public class IOUtils {
 	        // Enregistrement du fichier
 			saveInputStream(connection.getInputStream(), file);
 		} catch (Exception e) {
-			throw new OpenSubtitlesException("Erreur pendant la sauvegarde de l'URL '"+url+"' dans le fichier : "+file, e);
+			throw new EnVOException("Erreur pendant la sauvegarde de l'URL '"+url+"' dans le fichier : "+file, e);
 		} finally {
 			if ( in != null ) {
 				try {
 					in.close();
 				} catch (IOException e) {
-					throw new OpenSubtitlesException("Erreur pendant la sauvegarde de l'URL '"+url+"' dans le fichier : "+file, e);
+					throw new EnVOException("Erreur pendant la sauvegarde de l'URL '"+url+"' dans le fichier : "+file, e);
 				}
 			}
 			if ( out != null ) {
 				try {
 					out.close();
 				} catch (IOException e) {
-					throw new OpenSubtitlesException("Erreur pendant la sauvegarde de l'URL '"+url+"' dans le fichier : "+file, e);
+					throw new EnVOException("Erreur pendant la sauvegarde de l'URL '"+url+"' dans le fichier : "+file, e);
 				}
 			}
 		}
@@ -146,9 +146,9 @@ public class IOUtils {
 	 * @param url
 	 * @param resultFile
 	 * @return
-	 * @throws OpenSubtitlesException 
+	 * @throws EnVOException 
 	 */
-	public static String getURLContent(URL url, File resultFile) throws OpenSubtitlesException {
+	public static String getURLContent(URL url, File resultFile) throws EnVOException {
 		BufferedReader reader = null;
 		BufferedWriter writer = null;
 		try {
@@ -174,20 +174,20 @@ public class IOUtils {
 	        
 	        return pageBuffer.toString();
 		} catch(IOException e) {
-			throw new OpenSubtitlesException("Erreur pendant l'exécution de la requète : "+url, e);
+			throw new EnVOException("Erreur pendant l'exécution de la requète : "+url, e);
 		} finally {
 			if ( reader != null ) {
 				try {
 					reader.close();
 				} catch (IOException e) {
-					throw new OpenSubtitlesException("Erreur pendant l'exécution de la requète : "+url, e);
+					throw new EnVOException("Erreur pendant l'exécution de la requète : "+url, e);
 				}
 			}
 			if ( writer != null ) {
 				try {
 					writer.close();
 				} catch (IOException e) {
-					throw new OpenSubtitlesException("Erreur pendant l'exécution de la requète : "+url, e);
+					throw new EnVOException("Erreur pendant l'exécution de la requète : "+url, e);
 				}
 			}
 		}
@@ -198,9 +198,9 @@ public class IOUtils {
 	 * @param in
 	 * @param file
 	 * @return L'encoding détecté
-	 * @throws OpenSubtitlesException 
+	 * @throws EnVOException 
 	 */
-	protected static String detectEncodingAndSave(InputStream in, File file) throws OpenSubtitlesException {
+	protected static String detectEncodingAndSave(InputStream in, File file) throws EnVOException {
 		byte[] buffer = new byte[4096];
 		OutputStream out = null;
 		try {
@@ -225,20 +225,20 @@ public class IOUtils {
 		    detector.reset();
 		    return encoding;
 		} catch(IOException e) {
-			throw new OpenSubtitlesException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
+			throw new EnVOException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
 		} finally {
 			if ( in != null ) {
 				try {
 					in.close();
 				} catch (IOException e) {
-					throw new OpenSubtitlesException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
+					throw new EnVOException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
 				}
 			}
 			if ( out != null ) {
 				try {
 					out.close();
 				} catch (IOException e) {
-					throw new OpenSubtitlesException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
+					throw new EnVOException("Erreur pendant la sauvegarde dans le fichier : "+file, e);
 				}
 			}
 		}

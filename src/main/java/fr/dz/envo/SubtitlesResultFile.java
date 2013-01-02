@@ -1,12 +1,12 @@
-package fr.dz.opensubtitles;
+package fr.dz.envo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.dz.opensubtitles.util.Levenshtein;
+import fr.dz.envo.util.Levenshtein;
 
-public class OpenSubtitlesResultFile implements Serializable {
+public class SubtitlesResultFile implements Serializable {
 
 	private static final long serialVersionUID = 6726463780614990623L;
 	
@@ -25,7 +25,7 @@ public class OpenSubtitlesResultFile implements Serializable {
 	/**
 	 * Constructeur par défaut
 	 */
-	public OpenSubtitlesResultFile() {
+	public SubtitlesResultFile() {
 		
 	}
 	
@@ -33,7 +33,7 @@ public class OpenSubtitlesResultFile implements Serializable {
 	 * Effectue le scoring
 	 * @param request
 	 */
-	public void doScoring(OpenSubtitlesRequest request) {
+	public void doScoring(SubtitlesRequest request) {
 		
 		// Nom de fichier : on prend le minimum de la distance entre le fichier cherché et ceux trouvés
 		// Et on essaye d'obtenir un pourcentage par rapport au nombre de caractères de la chaîne de base
@@ -65,13 +65,13 @@ public class OpenSubtitlesResultFile implements Serializable {
 	 * Pour debug
 	 */
 	public void debug() {
-		OpenSubtitles.LOGGER.debug("   * Fichier concerné :");
-		OpenSubtitles.LOGGER.debug("     o id : "+id);
-		OpenSubtitles.LOGGER.debug("     o size : "+size);
-		OpenSubtitles.LOGGER.debug("     o scoring : "+scoring);
-		OpenSubtitles.LOGGER.debug("     o fileNames : ");
+		EnVO.LOGGER.debug("   * Fichier concerné :");
+		EnVO.LOGGER.debug("     o id : "+id);
+		EnVO.LOGGER.debug("     o size : "+size);
+		EnVO.LOGGER.debug("     o scoring : "+scoring);
+		EnVO.LOGGER.debug("     o fileNames : ");
 		for ( String filename : getFileNames() ) {
-			OpenSubtitles.LOGGER.debug("         "+filename);
+			EnVO.LOGGER.debug("         "+filename);
 		}
 	}
 	
@@ -93,7 +93,7 @@ public class OpenSubtitlesResultFile implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		OpenSubtitlesResultFile other = (OpenSubtitlesResultFile) obj;
+		SubtitlesResultFile other = (SubtitlesResultFile) obj;
 		if (fileNames == null) {
 			if (other.fileNames != null)
 				return false;

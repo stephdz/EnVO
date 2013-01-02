@@ -1,4 +1,4 @@
-package fr.dz.opensubtitles.util;
+package fr.dz.envo.util;
 
 /**
  * Implémentation de la distance de Levenshtein

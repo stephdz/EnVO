@@ -6,7 +6,7 @@
 	      <param name="ConversionPattern" value="%m%n"/>
 	    </layout>
 	</appender>
-	<logger name="fr.dz.opensubtitles">
+	<logger name="fr.dz.envo">
 		<level value="debug" />
 		<appender-ref ref="console" />
 	</logger>

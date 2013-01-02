@@ -1,4 +1,4 @@
-package fr.dz.opensubtitles.test;
+package fr.dz.envo.test;
 
 import java.io.File;
 
@@ -7,11 +7,11 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fr.dz.opensubtitles.OpenSubtitlesRequest;
-import fr.dz.opensubtitles.sources.OpenSubtitlesDownloader;
+import fr.dz.envo.SubtitlesRequest;
+import fr.dz.envo.sources.OpenSubtitlesDownloader;
 
 
-public class OpenSubtitlesDownloaderTestCase extends AbstractOpenSubtitlesTest {
+public class OpenSubtitlesDownloaderTestCase extends AbstractEnVOTest {
 
 	// Constantes
 	private static final String LANG = "fre";
@@ -34,7 +34,7 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractOpenSubtitlesTest {
 		debug();
 		
 		// Test de l'URL
-		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_1_RESULT_FILENAME);
+		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_1_RESULT_FILENAME);
 		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
 		Assert.assertEquals("URL", SERIE_1_URL, downloader.getQueryURL().toString());
 		
@@ -47,7 +47,7 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractOpenSubtitlesTest {
 		debug();
 		
 		// Test de l'URL
-		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_2_RESULTS_FILENAME);
+		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_2_RESULTS_FILENAME);
 		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
 		Assert.assertEquals("URL", SERIE_2_URL, downloader.getQueryURL().toString());
 		
@@ -60,7 +60,7 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractOpenSubtitlesTest {
 		debug();
 		
 		// Test de l'URL
-		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, FILM_FILENAME);
+		SubtitlesRequest request = new SubtitlesRequest(LANG, FILM_FILENAME);
 		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
 		Assert.assertEquals("URL", FILM_URL, downloader.getQueryURL().toString());
 		
@@ -73,7 +73,7 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractOpenSubtitlesTest {
 		debug();
 		
 		// Test depuis un fichier HTML résultat de hasSubtitles
-		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_1_RESULT_FILENAME);
+		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_1_RESULT_FILENAME);
 		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
 		if ( downloader.hasSubtitles() ) {
 			downloader.downloadFirstSubtitles();
@@ -86,7 +86,7 @@ public class OpenSubtitlesDownloaderTestCase extends AbstractOpenSubtitlesTest {
 		debug();
 		
 		// Test depuis un fichier HTML résultat de hasSubtitles
-		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_2_RESULTS_FILENAME);
+		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_2_RESULTS_FILENAME);
 		OpenSubtitlesDownloader downloader = new OpenSubtitlesDownloader(request);
 		if ( downloader.hasSubtitles() ) {
 			downloader.downloadFirstSubtitles();

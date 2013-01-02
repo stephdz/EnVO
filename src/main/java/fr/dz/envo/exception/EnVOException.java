@@ -1,13 +1,13 @@
-package fr.dz.opensubtitles.exception;
+package fr.dz.envo.exception;
 
-public class OpenSubtitlesException extends Exception {
+public class EnVOException extends Exception {
 
 	private static final long serialVersionUID = -7645997795284164044L;
 
 	/**
 	 * Constructeur par défaut
 	 */
-	public OpenSubtitlesException() {
+	public EnVOException() {
 		super();
 	}
 	
@@ -15,7 +15,7 @@ public class OpenSubtitlesException extends Exception {
 	 * Constructeur
 	 * @param string
 	 */
-	public OpenSubtitlesException(String message) {
+	public EnVOException(String message) {
 		super(message);
 	}
 
@@ -24,7 +24,7 @@ public class OpenSubtitlesException extends Exception {
 	 * @param message
 	 * @param cause
 	 */
-	public OpenSubtitlesException(String message, Throwable cause) {
+	public EnVOException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
@@ -32,7 +32,7 @@ public class OpenSubtitlesException extends Exception {
 	 * Constructeur
 	 * @param cause
 	 */
-	public OpenSubtitlesException(Throwable cause) {
+	public EnVOException(Throwable cause) {
 		super(cause);
 	}
 }

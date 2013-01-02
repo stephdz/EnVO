@@ -1,4 +1,4 @@
-package fr.dz.opensubtitles.test;
+package fr.dz.envo.test;
 
 import java.io.File;
 
@@ -7,11 +7,11 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fr.dz.opensubtitles.OpenSubtitlesRequest;
-import fr.dz.opensubtitles.sources.PodnapisiDownloader;
+import fr.dz.envo.SubtitlesRequest;
+import fr.dz.envo.sources.PodnapisiDownloader;
 
 
-public class PodnapisiDownloaderTestCase extends AbstractOpenSubtitlesTest {
+public class PodnapisiDownloaderTestCase extends AbstractEnVOTest {
 
 	// Constantes
 	private static final String LANG = "fre";
@@ -33,7 +33,7 @@ public class PodnapisiDownloaderTestCase extends AbstractOpenSubtitlesTest {
 		debug();
 		
 		// Test de l'URL
-		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_RESULT_FILENAME);
+		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_RESULT_FILENAME);
 		PodnapisiDownloader downloader = new PodnapisiDownloader(request);
 		Assert.assertEquals("URL", SERIE_URL, downloader.getQueryURL().toString());
 		
@@ -46,7 +46,7 @@ public class PodnapisiDownloaderTestCase extends AbstractOpenSubtitlesTest {
 		debug();
 		
 		// Test de l'URL
-		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, FILM_FILENAME);
+		SubtitlesRequest request = new SubtitlesRequest(LANG, FILM_FILENAME);
 		PodnapisiDownloader downloader = new PodnapisiDownloader(request);
 		Assert.assertEquals("URL", FILM_URL, downloader.getQueryURL().toString());
 		
@@ -59,7 +59,7 @@ public class PodnapisiDownloaderTestCase extends AbstractOpenSubtitlesTest {
 		debug();
 		
 		// Test depuis un fichier HTML résultat de hasSubtitles
-		OpenSubtitlesRequest request = new OpenSubtitlesRequest(LANG, SERIE_RESULT_FILENAME);
+		SubtitlesRequest request = new SubtitlesRequest(LANG, SERIE_RESULT_FILENAME);
 		PodnapisiDownloader downloader = new PodnapisiDownloader(request);
 		if ( downloader.hasSubtitles() ) {
 			downloader.downloadFirstSubtitles();

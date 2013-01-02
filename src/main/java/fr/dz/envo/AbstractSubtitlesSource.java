@@ -1,4 +1,4 @@
-package fr.dz.opensubtitles.sources;
+package fr.dz.envo;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,14 +11,11 @@ import java.util.zip.ZipFile;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import fr.dz.opensubtitles.OpenSubtitles;
-import fr.dz.opensubtitles.OpenSubtitlesRequest;
-import fr.dz.opensubtitles.OpenSubtitlesResult;
-import fr.dz.opensubtitles.exception.OpenSubtitlesException;
-import fr.dz.opensubtitles.util.IOUtils;
+import fr.dz.envo.exception.EnVOException;
+import fr.dz.envo.util.IOUtils;
 
 
-public abstract class AbstractOpenSubtitlesSource implements OpenSubtitlesSource {
+public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 	
 	// Constantes
 	protected static final String TARGET_ENCODING = "WINDOWS-1252";
@@ -26,17 +23,17 @@ public abstract class AbstractOpenSubtitlesSource implements OpenSubtitlesSource
 	protected static final String NFO_EXTENSION = "nfo";
 
 	// La requète
-	private OpenSubtitlesRequest request;
+	private SubtitlesRequest request;
 	
 	// Les résultats
-	private List<OpenSubtitlesResult> subtitlesResults;
+	private List<SubtitlesResult> subtitlesResults;
 	
 	/**
 	 * Constructeur à partir d'une recherche
 	 * @param request
-	 * @throws OpenSubtitlesException
+	 * @throws EnVOException
 	 */
-	public AbstractOpenSubtitlesSource(OpenSubtitlesRequest request) throws OpenSubtitlesException {
+	public AbstractSubtitlesSource(SubtitlesRequest request) throws EnVOException {
 		setRequest(request);
 	}
 	
@@ -47,23 +44,23 @@ public abstract class AbstractOpenSubtitlesSource implements OpenSubtitlesSource
 	/**
 	 * Récupère la liste des sous titres depuis la page de résultat de requète
 	 * @return
-	 * @throws OpenSubtitlesException 
+	 * @throws EnVOException 
 	 */
-	protected abstract List<OpenSubtitlesResult> getSubtitlesURLs() throws OpenSubtitlesException;
+	protected abstract List<SubtitlesResult> getSubtitlesURLs() throws EnVOException;
 	
 	/*
 	 * METHODES PUBLIQUES
 	 */
 	
 	@Override
-	public boolean downloadFirstSubtitles() throws OpenSubtitlesException {
+	public boolean downloadFirstSubtitles() throws EnVOException {
 		
 		// Récupération de la liste des URLs de sous-titres 
 		subtitlesResults = getSubtitlesURLs();
 		
 		// Choix du meilleur scoring (le plus petit)
-		OpenSubtitlesResult bestResult = null;
-		for ( OpenSubtitlesResult result : subtitlesResults ) {
+		SubtitlesResult bestResult = null;
+		for ( SubtitlesResult result : subtitlesResults ) {
 			if ( bestResult == null || result.getScoring() < bestResult.getScoring() ) {
 				bestResult = result;
 			}
@@ -81,9 +78,9 @@ public abstract class AbstractOpenSubtitlesSource implements OpenSubtitlesSource
 	/**
 	 * Télécharge le résultat passé en paramètre
 	 * @param bestResult
-	 * @throws OpenSubtitlesException 
+	 * @throws EnVOException 
 	 */
-	protected void download(OpenSubtitlesResult bestResult) throws OpenSubtitlesException {
+	protected void download(SubtitlesResult bestResult) throws EnVOException {
 		String fileName = getRequest().getFolder() + File.separator + getRequest().getFilename().substring(
 				getRequest().getFilename().lastIndexOf(File.separator) + 1,
 				getRequest().getFilename().lastIndexOf(".")) + "." + SRT_EXTENSION;
@@ -94,9 +91,9 @@ public abstract class AbstractOpenSubtitlesSource implements OpenSubtitlesSource
 	 * Télécharge le SRT présent dans un ZIP passé en paramètre dans un fichier précis
 	 * @param url
 	 * @param destinationFile
-	 * @throws OpenSubtitlesException 
+	 * @throws EnVOException 
 	 */
-	public static void download(URL url, String destinationFile) throws OpenSubtitlesException {
+	public static void download(URL url, String destinationFile) throws EnVOException {
 		try {
 			// Enregistrement du zip dans un fichier temporaire
 			File file = File.createTempFile("opensubtitle", ".zip");
@@ -128,16 +125,16 @@ public abstract class AbstractOpenSubtitlesSource implements OpenSubtitlesSource
 			if ( toExtract != null ) {
 				IOUtils.encodeInputStream(zip.getInputStream(toExtract), new File(destinationFile), TARGET_ENCODING);
 				
-				OpenSubtitles.LOGGER.info("#####################################################################");
-				OpenSubtitles.LOGGER.info("# Sous-titre sauvegardé : "+destinationFile);
-				OpenSubtitles.LOGGER.info("#####################################################################");
+				EnVO.LOGGER.info("#####################################################################");
+				EnVO.LOGGER.info("# Sous-titre sauvegardé : "+destinationFile);
+				EnVO.LOGGER.info("#####################################################################");
 			} else {
-				OpenSubtitles.LOGGER.info("#####################################################################");
-				OpenSubtitles.LOGGER.info("# Aucun fichier de sous-titre trouvé.");
-				OpenSubtitles.LOGGER.info("#####################################################################");
+				EnVO.LOGGER.info("#####################################################################");
+				EnVO.LOGGER.info("# Aucun fichier de sous-titre trouvé.");
+				EnVO.LOGGER.info("#####################################################################");
 			}
 		} catch (IOException e) {
-			throw new OpenSubtitlesException("Erreur pendant la sauvegarde de l'URL '"+url+"'", e);
+			throw new EnVOException("Erreur pendant la sauvegarde de l'URL '"+url+"'", e);
 		}
 	}
 	
@@ -149,9 +146,9 @@ public abstract class AbstractOpenSubtitlesSource implements OpenSubtitlesSource
 	 * Retourne le contenu correspondant à une URL
 	 * @param url
 	 * @return
-	 * @throws OpenSubtitlesException 
+	 * @throws EnVOException 
 	 */
-	public static String getURLContent(URL url) throws OpenSubtitlesException {
+	public static String getURLContent(URL url) throws EnVOException {
 		return IOUtils.getURLContent(url, null);
 	}
 	
@@ -168,19 +165,19 @@ public abstract class AbstractOpenSubtitlesSource implements OpenSubtitlesSource
 	 * GETTERS & SETTERS
 	 */
 	
-	protected OpenSubtitlesRequest getRequest() {
+	protected SubtitlesRequest getRequest() {
 		return request;
 	}
 	
-	protected void setRequest(OpenSubtitlesRequest request) {
+	protected void setRequest(SubtitlesRequest request) {
 		this.request = request;
 	}
 
-	public List<OpenSubtitlesResult> getSubtitlesResults() {
+	public List<SubtitlesResult> getSubtitlesResults() {
 		return subtitlesResults;
 	}
 
-	public void setSubtitlesResults(List<OpenSubtitlesResult> subtitlesResults) {
+	public void setSubtitlesResults(List<SubtitlesResult> subtitlesResults) {
 		this.subtitlesResults = subtitlesResults;
 	}
 }

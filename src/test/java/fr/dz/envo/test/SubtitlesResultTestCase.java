@@ -1,10 +1,10 @@
-package fr.dz.opensubtitles.test;
+package fr.dz.envo.test;
 
 import java.io.File;
 
 import org.junit.BeforeClass;
 
-public class OpenSubtitlesResultTestCase extends AbstractOpenSubtitlesTest {
+public class SubtitlesResultTestCase extends AbstractEnVOTest {
 
 	// Constantes
 	private static final String LANG = "fre";

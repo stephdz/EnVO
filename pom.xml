@@ -1,20 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>OpenSubtitles</groupId>
-	<artifactId>OpenSubtitles</artifactId>
+	<groupId>EnVO</groupId>
+	<artifactId>EnVO</artifactId>
 	<version>1.1-SNAPSHOT</version>
-	<name>OpenSubtitles</name>
+	<name>EnVO</name>
 	<description>Automatic subtitles download</description>
 	<organization>
 		<name>StephDz</name>
 		<url>https://github.com/stephdz</url>
 	</organization>
 	<issueManagement>
-		<url>https://github.com/stephdz/OpenSubtitles/issues</url>
+		<url>https://github.com/stephdz/EnVO/issues</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:git:https://github.com/stephdz/OpenSubtitles</connection>
-		<developerConnection>scm:git:https://github.com/stephdz/OpenSubtitles</developerConnection>
+		<connection>scm:git:https://github.com/stephdz/EnVO</connection>
+		<developerConnection>scm:git:https://github.com/stephdz/EnVO</developerConnection>
 	</scm>
 	<properties>
 		<java.version>1.6</java.version>
@@ -40,7 +40,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>fr.dz.opensubtitles.OpenSubtitles</mainClass>
+							<mainClass>fr.dz.envo.EnVO</mainClass>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
 						</manifest>
