@@ -3,6 +3,16 @@ OpenSubtitles
 
 Utilitaire pour récupérer des sous titres simplement en ligne de commande depuis OpenSubtitles.org
 
+v1.1 :
+======
+
+ - Corrections de bugs
+ - Réécriture d'une partie du code afin d'utiliser la librairie "jsoup" (http://jsoup.org/) pour le parsing HTML (code Java plus simple à comprendre)
+ - Possibilité de coder plusieurs sources de sous-titres :
+    * Interface de codage simplifiée
+    * Podnaposi ajouté en tant qu'exemple
+
+
 v1.0 :
 ======
 
