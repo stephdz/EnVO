@@ -1,4 +1,4 @@
-package fr.dz.envo;
+package fr.dz.envo.api;
 
 import java.util.List;
 

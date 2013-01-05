@@ -1,9 +1,10 @@
-package fr.dz.envo;
+package fr.dz.envo.api;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.dz.envo.EnVO;
 import fr.dz.envo.util.Levenshtein;
 
 public class SubtitlesResultFile implements Serializable {
@@ -51,7 +52,7 @@ public class SubtitlesResultFile implements Serializable {
 		
 		// Taille de fichier : on fait la différence en valeur absolue
 		Integer fileSizeScoring = DEFAULT_FILESIZE_SCORING;
-		if ( request.getFilesize() != null ) {
+		if ( request.getFilesize() != null && getSize() != null ) {
 			Long minDifference = Math.abs(request.getFilesize() - getSize());
 			fileSizeScoring = minDifference.intValue() * 100 / request.getFilesize().intValue();
 		}

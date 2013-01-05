@@ -14,17 +14,17 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
-import fr.dz.envo.AbstractSubtitlesSource;
 import fr.dz.envo.EnVO;
-import fr.dz.envo.SubtitlesRequest;
-import fr.dz.envo.SubtitlesResult;
-import fr.dz.envo.SubtitlesResultFile;
+import fr.dz.envo.api.AbstractSubtitlesSource;
+import fr.dz.envo.api.SubtitlesRequest;
+import fr.dz.envo.api.SubtitlesResult;
+import fr.dz.envo.api.SubtitlesResultFile;
 import fr.dz.envo.exception.EnVOException;
 
 /**
  * Recherche sur opensubtitles.org
  */
-@Service("OpenSubtitles")
+@Service("opensubtitles")
 public class OpenSubtitlesDownloader extends AbstractSubtitlesSource {
 	
 	// Constantes pour construire l'URL de recherche
@@ -66,7 +66,7 @@ public class OpenSubtitlesDownloader extends AbstractSubtitlesSource {
 		StringBuffer queryURLBuffer = new StringBuffer();
 		queryURLBuffer.append(QUERY_URL_START);
 		if ( request.getLang() != null ) {
-			appendParameter(queryURLBuffer, LANGUAGE_PARAM_NAME, request.getLang());
+			appendParameter(queryURLBuffer, LANGUAGE_PARAM_NAME, getSpecificLanguageCode(request.getLang()));
 		} else {
 			throw new EnVOException("La langue est obligatoire pour le fichier "+request.getFilename());
 		}
@@ -217,7 +217,7 @@ public class OpenSubtitlesDownloader extends AbstractSubtitlesSource {
 		}
 		
 		// Récupération de l'info "Posteur de confiance"
-		// FIXME Gérer les différents statuts d'EnVO
+		// FIXME Gérer les différents statuts d'OpenSubtitles
 		result.setTrusted(subtitlePage.indexOf(TRUSTED_IMAGE) != -1);
 		
 		// Scoring

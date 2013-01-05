@@ -6,7 +6,7 @@ import java.net.URL;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fr.dz.envo.AbstractSubtitlesSource;
+import fr.dz.envo.api.AbstractSubtitlesSource;
 
 
 public class EncodingTestCase extends AbstractEnVOTest {

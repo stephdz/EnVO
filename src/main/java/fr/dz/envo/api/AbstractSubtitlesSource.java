@@ -1,16 +1,20 @@
-package fr.dz.envo;
+package fr.dz.envo.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.stereotype.Service;
 
+import fr.dz.envo.EnVO;
 import fr.dz.envo.exception.EnVOException;
 import fr.dz.envo.util.IOUtils;
 
@@ -28,6 +32,9 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 	// Les résultats
 	private List<SubtitlesResult> subtitlesResults;
 	
+	// La table de correspondance pour les codes langue
+	private Properties languages;
+	
 	/**
 	 * Constructeur par défaut
 	 */
@@ -43,6 +50,54 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 	@Override
 	public void init(SubtitlesRequest request) throws EnVOException {
 		setRequest(request);
+		
+		// Chargement du fichier properties pour les codes langue
+		InputStream in = null;
+		try {
+			
+			in = getClass().getResourceAsStream("/lang/"+getSourceId()+".properties");
+			if ( in != null ) {
+				languages = new Properties();
+				languages.load(in);
+			}
+		} catch (IOException e) {
+			throw new EnVOException("Erreur pendant le chargement du fichier de langue", e);
+		} finally {
+			if ( in != null ) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					throw new EnVOException("Erreur pendant le chargement du fichier de langue", e);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Récuprère le code langage spécifique à la source dans le fichier de properties lang/<source>.properties 
+	 * Si pas de fichier properties, renvoie le code iso
+	 * @param isoCode
+	 * @return
+	 */
+	public String getSpecificLanguageCode(String isoCode) {
+		if ( languages != null ) {
+			return languages.getProperty(isoCode);
+		} else {
+			return isoCode;
+		}
+	}
+	
+	/**
+	 * Retourne l'id Spring de la source à partir de l'annotation @Service
+	 * @return
+	 */
+	public String getSourceId() {
+		Service service = getClass().getAnnotation(Service.class);
+		if ( service != null ) {
+			return service.value();
+		} else {
+			return null;
+		}
 	}
 	
 	/*

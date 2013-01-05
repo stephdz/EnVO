@@ -9,6 +9,10 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import fr.dz.envo.api.AbstractSubtitlesSource;
+import fr.dz.envo.api.SubtitlesRequest;
+import fr.dz.envo.api.SubtitlesResult;
+import fr.dz.envo.api.SubtitlesSource;
 import fr.dz.envo.exception.EnVOException;
 
 public class EnVO {

@@ -12,17 +12,17 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
-import fr.dz.envo.AbstractSubtitlesSource;
 import fr.dz.envo.EnVO;
-import fr.dz.envo.SubtitlesRequest;
-import fr.dz.envo.SubtitlesResult;
-import fr.dz.envo.SubtitlesResultFile;
+import fr.dz.envo.api.AbstractSubtitlesSource;
+import fr.dz.envo.api.SubtitlesRequest;
+import fr.dz.envo.api.SubtitlesResult;
+import fr.dz.envo.api.SubtitlesResultFile;
 import fr.dz.envo.exception.EnVOException;
 
 /**
  * Recherche sur podnapisi.net
  */
-@Service("Podnapisi")
+@Service("podnapisi")
 public class PodnapisiDownloader extends AbstractSubtitlesSource {
 	
 	// Constantes pour construire l'URL de recherche
@@ -61,7 +61,7 @@ public class PodnapisiDownloader extends AbstractSubtitlesSource {
 		StringBuffer queryURLBuffer = new StringBuffer();
 		queryURLBuffer.append(QUERY_URL_START);
 		if ( request.getLang() != null ) {
-			appendParameter(queryURLBuffer, LANGUAGE_PARAM_NAME, getLanguageId(request.getLang()));
+			appendParameter(queryURLBuffer, LANGUAGE_PARAM_NAME, getSpecificLanguageCode(request.getLang()));
 		} else {
 			throw new EnVOException("La langue est obligatoire pour le fichier "+request.getFilename());
 		}
@@ -188,16 +188,6 @@ public class PodnapisiDownloader extends AbstractSubtitlesSource {
 		result.doScoring(getRequest());
 		
 		return result;
-	}
-	
-	/**
-	 * Retourne l'id de la lanque sur Podnapisi à partir de son code
-	 * @param lang
-	 * @return
-	 */
-	private String getLanguageId(String lang) {
-		// TODO Faire une table de correspondance
-		return "8";
 	}
 
 	/*

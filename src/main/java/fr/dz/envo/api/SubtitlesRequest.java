@@ -1,10 +1,11 @@
-package fr.dz.envo;
+package fr.dz.envo.api;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fr.dz.envo.EnVO;
 import fr.dz.envo.exception.EnVOException;
 
 public class SubtitlesRequest implements Serializable {

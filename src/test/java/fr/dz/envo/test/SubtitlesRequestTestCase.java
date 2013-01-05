@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fr.dz.envo.SubtitlesRequest;
+import fr.dz.envo.api.SubtitlesRequest;
 
 public class SubtitlesRequestTestCase extends AbstractEnVOTest {
 

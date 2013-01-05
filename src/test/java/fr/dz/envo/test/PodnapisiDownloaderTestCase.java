@@ -7,8 +7,8 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fr.dz.envo.AbstractSubtitlesSource;
-import fr.dz.envo.SubtitlesRequest;
+import fr.dz.envo.api.AbstractSubtitlesSource;
+import fr.dz.envo.api.SubtitlesRequest;
 import fr.dz.envo.sources.PodnapisiDownloader;
 
 

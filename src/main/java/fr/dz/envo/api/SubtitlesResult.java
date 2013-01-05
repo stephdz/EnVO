@@ -1,10 +1,11 @@
-package fr.dz.envo;
+package fr.dz.envo.api;
 
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.dz.envo.EnVO;
 import fr.dz.envo.util.Levenshtein;
 
 public class SubtitlesResult implements Serializable {
@@ -52,10 +53,12 @@ public class SubtitlesResult implements Serializable {
 		
 		// On prend le score minimum des fichiers
 		List<Integer> scorings = new ArrayList<Integer>();
-		for ( SubtitlesResultFile file : getFiles() ) {
-			scorings.add(file.getScoring());
+		if ( getFiles() != null ) {
+			for ( SubtitlesResultFile file : getFiles() ) {
+				scorings.add(file.getScoring());
+			}
+			this.scoring = Levenshtein.min(scorings.toArray(new Integer[0]));
 		}
-		this.scoring = Levenshtein.min(scorings.toArray(new Integer[0]));
 		if ( this.scoring == null ) {
 			this.scoring = DEFAULT_SCORING;
 		}

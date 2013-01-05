@@ -1,0 +1,314 @@
+<div class="languages language_filters">
+	<div class="language_filter">
+		<label class="language" international="Albanian">
+			<input type="checkbox" value="29">
+			Albanais
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="German">
+			<input type="checkbox" value="5">
+			Allemand
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language selected" international="English">
+			<input type="checkbox" value="2">
+			Anglais
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Arabic">
+			<input type="checkbox" value="12">
+			Arabe
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Argentino">
+			<input type="checkbox" value="14">
+			Argentin
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Belarus">
+			<input type="checkbox" value="50">
+			Biélorusse
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Bosnian">
+			<input type="checkbox" value="10">
+			Bosnien
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Brazilian">
+			<input type="checkbox" value="48">
+			Brésilien
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Bulgarian">
+			<input type="checkbox" value="33">
+			Bulgare
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Catalan">
+			<input type="checkbox" value="53">
+			Catalan
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Chinese">
+			<input type="checkbox" value="17">
+			Chinois
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Korean">
+			<input type="checkbox" value="4">
+			Coréen
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Croatian">
+			<input type="checkbox" value="38">
+			Croate
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Danish">
+			<input type="checkbox" value="24">
+			Danois
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Spanish">
+			<input type="checkbox" value="28">
+			Espagnol
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Estonian">
+			<input type="checkbox" value="20">
+			Estonien
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Finnish">
+			<input type="checkbox" value="31">
+			Finlandais
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language selected" international="French">
+			<input type="checkbox" value="8">
+			Français
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Greek">
+			<input type="checkbox" value="16">
+			Grec
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Greenlandic">
+			<input type="checkbox" value="57">
+			Greenlandic
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Hindi">
+			<input type="checkbox" value="42">
+			Hindi
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Dutch">
+			<input type="checkbox" value="23">
+			Hollandais
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Hungarian">
+			<input type="checkbox" value="15">
+			Hongrois
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Hebrew">
+			<input type="checkbox" value="22">
+			Hébreu
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Indonesian">
+			<input type="checkbox" value="54">
+			Indonésien
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Irish">
+			<input type="checkbox" value="49">
+			Irlandais
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Icelandic">
+			<input type="checkbox" value="6">
+			Islandais
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Italian">
+			<input type="checkbox" value="9">
+			Italien
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Japanese">
+			<input type="checkbox" value="11">
+			Japonais
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Kazakh">
+			<input type="checkbox" value="58">
+			Kazakh
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Latvian">
+			<input type="checkbox" value="21">
+			Letton
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Lithuanian">
+			<input type="checkbox" value="19">
+			Lituanien
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Macedonian">
+			<input type="checkbox" value="35">
+			Macédonien
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Malay">
+			<input type="checkbox" value="55">
+			Malaisien
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Mandarin">
+			<input type="checkbox" value="40">
+			Mandarin
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Norwegian">
+			<input type="checkbox" value="3">
+			Norvégien
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Farsi">
+			<input type="checkbox" value="52">
+			Persan
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Polish">
+			<input type="checkbox" value="26">
+			Polonais
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Portuguese">
+			<input type="checkbox" value="32">
+			Portugais
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Romanian">
+			<input type="checkbox" value="13">
+			Roumain
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Russian">
+			<input type="checkbox" value="27">
+			Russe
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Serbian">
+			<input type="checkbox" value="36">
+			Serbe
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Serbian (Cyrillic)">
+			<input type="checkbox" value="47">
+			Serbe (Cyrillique)
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Sinhala">
+			<input type="checkbox" value="56">
+			Sinhala
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Slovak">
+			<input type="checkbox" value="37">
+			Slovaque
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Slovenian">
+			<input type="checkbox" value="1">
+			Slovène
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Swedish">
+			<input type="checkbox" value="25">
+			Suédois
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Czech">
+			<input type="checkbox" value="7">
+			Tchèque
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Thai">
+			<input type="checkbox" value="44">
+			Thaï
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Turkish">
+			<input type="checkbox" value="30">
+			Turc
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Ukrainian">
+			<input type="checkbox" value="46">
+			Ukrainien
+		</label>
+	</div>
+	<div class="language_filter">
+		<label class="language" international="Vietnamese">
+			<input type="checkbox" value="51">
+			Vietnamien
+		</label>
+	</div>
+</div>
