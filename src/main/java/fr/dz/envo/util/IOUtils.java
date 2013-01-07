@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -188,6 +189,46 @@ public class IOUtils {
 					writer.close();
 				} catch (IOException e) {
 					throw new EnVOException("Erreur pendant l'exécution de la requète : "+url, e);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Détecte l'encoding d'un fichier
+	 * @param file
+	 * @return
+	 * @throws EnVOException
+	 */
+	public static String detectEncoding(File file) throws EnVOException {
+		byte[] buffer = new byte[4096];
+		InputStream in = null;
+		try {
+			// Création du flux d'entrée
+			in = new BufferedInputStream(new FileInputStream(file)); 
+		
+			// Lecture du fichier via un detecteur d'encoding
+			UniversalDetector detector = new UniversalDetector(null);
+		    int nread;
+		    while ((nread = in.read(buffer)) > 0 && ! detector.isDone()) {
+		    	
+		    	// Passage des données au détecteur
+		    	detector.handleData(buffer, 0, nread);
+		    }
+		    
+		    // Retour de l'encoding détecté
+		    detector.dataEnd();
+		    String encoding = detector.getDetectedCharset();
+		    detector.reset();
+		    return encoding;
+		} catch(IOException e) {
+			throw new EnVOException("Erreur pendant la lecture du fichier : "+file, e);
+		} finally {
+			if ( in != null ) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					throw new EnVOException("Erreur pendant la lecture du fichier : "+file, e);
 				}
 			}
 		}

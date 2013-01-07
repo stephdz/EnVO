@@ -22,7 +22,6 @@ import fr.dz.envo.util.IOUtils;
 public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 	
 	// Constantes
-	protected static final String TARGET_ENCODING = "WINDOWS-1252";
 	protected static final String SRT_EXTENSION = "srt";
 	protected static final String NFO_EXTENSION = "nfo";
 
@@ -177,7 +176,7 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 
 			// Extraction du fichier et conversion dans un encoding que la Freebox accepte
 			if ( toExtract != null ) {
-				IOUtils.encodeInputStream(zip.getInputStream(toExtract), new File(destinationFile), TARGET_ENCODING);
+				IOUtils.encodeInputStream(zip.getInputStream(toExtract), new File(destinationFile), EnVO.DEFAULT_TARGET_ENCODING);
 				
 				EnVO.LOGGER.info("#####################################################################");
 				EnVO.LOGGER.info("# Sous-titre sauvegardé : "+url);

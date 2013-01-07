@@ -2,7 +2,9 @@
 ##############################################################################################
 # envo.sh : Téléchargement des sous-titres sur Internet
 # Paramètres :
-#  - $1 : options (-v pour plus de logs, -w pour avoir la progression dans un popup)
+#  - $1 : options (-v pour plus de logs, 
+#                  -w pour avoir la progression dans un popup,
+#                  -t pour transcoder un fichier de sous-titres)
 #  - $2 : langue (fre pour français)
 #  - $3 : chemin vers la vidéo ou nom de fichier (existance non obligatoire)
 ##############################################################################################
