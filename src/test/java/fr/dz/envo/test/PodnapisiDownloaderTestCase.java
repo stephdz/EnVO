@@ -18,6 +18,7 @@ public class PodnapisiDownloaderTestCase extends AbstractEnVOTest {
 	private static final String LANG = "fre";
 	private static final String FILE_PREFIX = "target/test-files/";
 	private static final String SERIE_RESULT_FILENAME = FILE_PREFIX + "The.Big.Bang.Theory.S05E23.[LOL].avi";
+	private static final String TRUNCATED_SERIE_RESULT_FILENAME = FILE_PREFIX + "The.Big.Bang.Theory.S06E10.avi";
 	//private static final String FILM_FILENAME = FILE_PREFIX + "Wild.Wild.West.[LOL].avi"; TODO A faire marcher
 	private static final String FILM_FILENAME = FILE_PREFIX + "Wild.Wild.West.avi";
 	private static final String SERIE_URL = "http://www.podnapisi.net/fr/ppodnapisi/search?sT=1&sJ=8&sTS=5&sTE=23&sK=the+big+bang+theory";
@@ -69,5 +70,18 @@ public class PodnapisiDownloaderTestCase extends AbstractEnVOTest {
 			AbstractSubtitlesSource.downloadBestSubtitles(request, downloader.findSubtitles());
 		}
 		Assert.assertEquals("Nombre de sous-titres invalides pour "+SERIE_RESULT_FILENAME, 5, downloader.getSubtitlesResults().size());
+	}
+	
+	@Test
+	public void testDownloadSerieTruncated() throws Exception {
+		debug();
+		
+		// Test depuis un fichier HTML résultat de hasSubtitles
+		SubtitlesRequest request = new SubtitlesRequest(LANG, TRUNCATED_SERIE_RESULT_FILENAME);
+		PodnapisiDownloader downloader = new PodnapisiDownloader();
+		downloader.init(request);
+		if ( downloader.hasSubtitles() ) {
+			AbstractSubtitlesSource.downloadBestSubtitles(request, downloader.findSubtitles());
+		}
 	}
 }

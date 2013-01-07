@@ -210,7 +210,7 @@ public class IOUtils {
 			// Lecture du fichier via un detecteur d'encoding
 			UniversalDetector detector = new UniversalDetector(null);
 		    int nread;
-		    while ((nread = in.read(buffer)) > 0 && !detector.isDone()) {
+		    while ((nread = in.read(buffer)) > 0) {
 		    	
 		    	// Passage des données au détecteur
 		    	detector.handleData(buffer, 0, nread);
