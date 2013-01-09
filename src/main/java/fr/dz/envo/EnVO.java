@@ -3,19 +3,14 @@ package fr.dz.envo;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import fr.dz.envo.api.AbstractSubtitlesSource;
 import fr.dz.envo.api.SubtitlesRequest;
-import fr.dz.envo.api.SubtitlesResult;
-import fr.dz.envo.api.SubtitlesSource;
 import fr.dz.envo.exception.EnVOException;
+import fr.dz.envo.util.DownloaderThreadManager;
 import fr.dz.envo.util.IOUtils;
 
 public class EnVO {
@@ -76,24 +71,10 @@ public class EnVO {
 					return;
 				}
 			
-				// Création de la requète
+				// Création de la requète et utilisation d'un thread par source pour optimiser le tout
 				SubtitlesRequest request = new SubtitlesRequest(options.get(0), options.get(1));
-				
-				// Initialisation du contexte Spring pour récupérer les downloaders
-				ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-				Map<String,SubtitlesSource> sources = context.getBeansOfType(SubtitlesSource.class);
-				
-				// Recherche des sous titres existants
-				List<SubtitlesResult> results = new ArrayList<SubtitlesResult>();
-				for ( SubtitlesSource source : sources.values() ) {
-					source.init(request);
-					if ( source.hasSubtitles() ) {
-						results.addAll(source.findSubtitles());
-					}
-				}
-				
-				// Téléchargement des meilleurs sous-titres
-				AbstractSubtitlesSource.downloadBestSubtitles(request, results);
+				DownloaderThreadManager manager = new DownloaderThreadManager(request);
+				manager.downloadSubtitles();
 			}
 		} catch (EnVOException e) {
 			System.err.println(e.getMessage());
