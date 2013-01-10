@@ -8,9 +8,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import fr.dz.envo.api.SearchSubtitlesManager;
 import fr.dz.envo.api.SubtitlesRequest;
 import fr.dz.envo.exception.EnVOException;
-import fr.dz.envo.util.DownloaderThreadManager;
 import fr.dz.envo.util.IOUtils;
 
 public class EnVO {
@@ -73,8 +73,8 @@ public class EnVO {
 			
 				// Création de la requète et utilisation d'un thread par source pour optimiser le tout
 				SubtitlesRequest request = new SubtitlesRequest(options.get(0), options.get(1));
-				DownloaderThreadManager manager = new DownloaderThreadManager(request);
-				manager.downloadSubtitles();
+				SearchSubtitlesManager manager = new SearchSubtitlesManager(request);
+				manager.doTasks();
 			}
 		} catch (EnVOException e) {
 			System.err.println(e.getMessage());
