@@ -11,6 +11,7 @@ v1.1 :
  - Possibilité de coder plusieurs sources de sous-titres :
     * Interface de codage simplifiée
     * Podnaposi ajouté en tant qu'exemple
+ - Ajout du multithreading pour compenser les lenteurs réseau éventuelles
 
 
 v1.0 :
