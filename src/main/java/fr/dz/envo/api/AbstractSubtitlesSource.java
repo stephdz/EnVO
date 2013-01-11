@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
@@ -34,12 +35,58 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 	// La table de correspondance pour les codes langue
 	private Properties languages;
 	
+	// L'URL de la requète
+	private URL queryURL;
+	
+	// Le document contenu de la page résultat de recherche
+	private Document queryResultDocument;
+	
+	
 	/**
 	 * Constructeur par défaut
 	 */
 	public AbstractSubtitlesSource() {
 		super();
 	}
+	
+	/*
+	 * METHODES ABSTRAITES A REDEFINIR
+	 */
+	
+	/**
+	 * Construit l'URL de la requête de recherche de sous-titres
+	 * @return
+	 * @throws EnVOException
+	 */
+	public abstract URL buildQueryURL() throws EnVOException;
+	
+	/**
+	 * Retourne true s'il y a un résultat de recherche, false sinon
+	 * @param resultPage
+	 * @return
+	 * @throws EnVOException
+	 */
+	public abstract boolean hasResults(Document resultPage) throws EnVOException;
+	
+	/**
+	 * Retourne la liste des URLs correspondantes aux pages de résultat
+	 * @param resultPage
+	 * @return
+	 * @throws EnVOException
+	 */
+	public abstract List<URL> getResultsURLs(Document resultPage) throws EnVOException;
+	
+	/**
+	 * Crée un objet résultat à partir d'une page de téléchargement
+	 * @param downloadPage
+	 * @return
+	 * @throws EnVOException
+	 */
+	public abstract SubtitlesResult createResult(Document downloadPage) throws EnVOException;
+	
+	/*
+	 * METHODES DE L'INTERFACE
+	 */
 	
 	/**
 	 * Initialisation à partir d'une recherche
@@ -48,7 +95,9 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 	 */
 	@Override
 	public void init(SubtitlesRequest request) throws EnVOException {
-		setRequest(request);
+		
+		// Copie de la request
+		this.request = request;
 		
 		// Chargement du fichier properties pour les codes langue
 		InputStream in = null;
@@ -70,10 +119,46 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 				}
 			}
 		}
+		
+		// Construction de l'URL de recherche
+		this.queryURL = buildQueryURL();
+	}
+	
+	@Override
+	public boolean hasSubtitles() throws EnVOException {
+		
+		EnVO.LOGGER.debug("#####################################################################");
+		EnVO.LOGGER.debug("# Exécution de la requète : "+queryURL);
+		EnVO.LOGGER.debug("#####################################################################");
+		
+        // Récupération de la page de résultat de la requète
+        this.queryResultDocument = getJsoupDocument(queryURL);
+        
+        return hasResults(queryResultDocument);
+	}
+	
+	@Override
+	public List<SubtitlesResult> findSubtitles() throws EnVOException {
+		this.subtitlesResults = new ArrayList<SubtitlesResult>();
+		
+		// Récupération des URLs de résultat
+		List<URL> results = getResultsURLs(queryResultDocument);
+		
+		// Pour chaque page résultat, création d'un objet résultat
+		// TODO Rendre cette action multithread
+		for ( URL resultURL : results ) {
+			subtitlesResults.add(createResult(getJsoupDocument(resultURL)));
+		}
+		
+		return subtitlesResults;
 	}
 
+	/*
+	 * METHODES UTILITAIRES
+	 */
+
 	/**
-	 * Récuprère le code langage spécifique à la source dans le fichier de properties lang/<source>.properties 
+	 * Récupère le code langage spécifique à la source dans le fichier de properties lang/<source>.properties 
 	 * Si pas de fichier properties, renvoie le code iso
 	 * @param isoCode
 	 * @return
@@ -90,7 +175,7 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 	 * Retourne l'id Spring de la source à partir de l'annotation @Service
 	 * @return
 	 */
-	public String getSourceId() {
+	protected String getSourceId() {
 		Service service = getClass().getAnnotation(Service.class);
 		if ( service != null ) {
 			return service.value();
@@ -101,6 +186,7 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 	
 	/*
 	 * METHODES STATIQUES
+	 * FIXME Il doit être possible de les virer ou en déplacer dans IOUtils
 	 */
 	
 	/**
@@ -192,46 +278,29 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 		}
 	}
 	
-	/*
-	 * METHODES UTILITAIRES
-	 */
-
-	/**
-	 * Retourne le contenu correspondant à une URL
-	 * @param url
-	 * @return
-	 * @throws EnVOException 
-	 */
-	public static String getURLContent(URL url) throws EnVOException {
-		return IOUtils.getURLContent(url, null);
-	}
-	
 	/**
 	 * Retourne un document Jsoup à partir de HTML
 	 * @param content
 	 * @return
+	 * @throws EnVOException 
 	 */
-	public static Document getJsoupDocument(String content) {
-		return Jsoup.parse(content);
+	public static Document getJsoupDocument(URL url) throws EnVOException {
+		return Jsoup.parse(IOUtils.getURLContent(url));
 	}
 	
 	/*
 	 * GETTERS & SETTERS
 	 */
 	
-	protected SubtitlesRequest getRequest() {
+	public SubtitlesRequest getRequest() {
 		return request;
 	}
-	
-	protected void setRequest(SubtitlesRequest request) {
-		this.request = request;
+
+	public URL getQueryURL() {
+		return queryURL;
 	}
 
 	public List<SubtitlesResult> getSubtitlesResults() {
 		return subtitlesResults;
-	}
-
-	public void setSubtitlesResults(List<SubtitlesResult> subtitlesResults) {
-		this.subtitlesResults = subtitlesResults;
 	}
 }

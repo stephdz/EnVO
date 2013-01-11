@@ -195,6 +195,16 @@ public class IOUtils {
 	}
 	
 	/**
+	 * Retourne le contenu correspondant à une URL
+	 * @param url
+	 * @return
+	 * @throws EnVOException 
+	 */
+	public static String getURLContent(URL url) throws EnVOException {
+		return getURLContent(url, null);
+	}
+	
+	/**
 	 * Détecte l'encoding d'un fichier
 	 * @param file
 	 * @return
