@@ -21,6 +21,7 @@ import fr.dz.envo.exception.EnVOException;
 
 /**
  * Recherche sur opensubtitles.org
+ * FIXME Ne fonctionne pas pour les films : "Blood.Diamond.avi"
  */
 @Service("opensubtitles")
 public class OpenSubtitlesDownloader extends AbstractSubtitlesSource {

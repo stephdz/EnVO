@@ -19,6 +19,7 @@ import fr.dz.envo.exception.EnVOException;
 
 /**
  * Recherche sur podnapisi.net
+ * FIXME Ne fonctionne pas pour les films : "Blood.Diamond.avi"
  */
 @Service("podnapisi")
 public class PodnapisiDownloader extends AbstractSubtitlesSource {

@@ -215,6 +215,7 @@ public abstract class AbstractSubtitlesSource implements SubtitlesSource {
 	
 	/**
 	 * Télécharge le résultat passé en paramètre
+	 * FIXME Plante avec "blood diamond.avi"
 	 * @param request
 	 * @param bestResult
 	 * @throws EnVOException 
